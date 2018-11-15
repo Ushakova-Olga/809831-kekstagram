@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ольга Ушакова](https://up.htmlacademy.ru/javascript/16/user/809831).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Рябинин](https://htmlacademy.ru/profile/haschish).
 
 ---
 
