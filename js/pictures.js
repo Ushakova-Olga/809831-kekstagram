@@ -21,16 +21,22 @@ var getRandomItem = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
+var getRandomNumber = function (min, max) {
+  if ((min >= 0) && (max > 0) && (max > min)) {
+    return (min + Math.floor(Math.random() * (max - min + 1)));
+  }
+  return 0;
+};
+
 /* Генерация массива JS объектов */
 var generate = function (numObjects) {
   var arrayObjects = [];
 
   for (var i = 0; i < numObjects; i++) {
     var objectUrl = 'photos/' + (i + 1) + '.jpg';
-    var objectLikes = 15 + Math.floor(Math.random() * 186);
-
+    var objectLikes = getRandomNumber(15, 200);
     var objectDescription = getRandomItem(DESCRIPT);
-    var numberComments = Math.floor(Math.random() * 10);
+    var numberComments = getRandomNumber(0, 9);
     var objectComments = [];
 
     for (var j = 0; j < numberComments; j++) {
@@ -48,7 +54,7 @@ var generate = function (numObjects) {
 };
 
 /* создание DOM-элемента на основе JS-объекта */
-var createObject = function (object, template) {
+var createElementPicture = function (object, template) {
   var objectElement = template.cloneNode(true);
   objectElement.querySelector('.picture__img').src = object.url;
   objectElement.querySelector('.picture__likes').textContent = object.likes;
@@ -58,10 +64,10 @@ var createObject = function (object, template) {
 };
 
 /* функция заполнения блока DOM-элементами на основе массива JS-объектов */
-var appendObjects = function (arr, template) {
+var createFragmentPictures = function (arr, template) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arr.length; i++) {
-    fragment.appendChild(createObject(arr[i], template));
+    fragment.appendChild(createElementPicture(arr[i], template));
   }
   return fragment;
 };
@@ -80,14 +86,13 @@ var pictureTemplate = document.querySelector('#picture')
     .querySelector('.picture');
 
 /* 3. Отрисуйте сгенерированные DOM-элементы в блок .pictures */
-var fragmentObjects = appendObjects(arrObjectsPicture, pictureTemplate);
+var fragmentPictures = createFragmentPictures(arrObjectsPicture, pictureTemplate);
 var listPictureElements = document.querySelector('.pictures');
-listPictureElements.appendChild(fragmentObjects);
+listPictureElements.appendChild(fragmentPictures);
 
 /* 4. Покажите элемент .big-picture */
 var blockBigPicture = document.querySelector('.big-picture');
 blockBigPicture.classList.remove('hidden');
-
 
 blockBigPicture.querySelector('.big-picture__img img').src = arrObjectsPicture[0].url;
 blockBigPicture.querySelector('.likes-count').textContent = arrObjectsPicture[0].likes;
