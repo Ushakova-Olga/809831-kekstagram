@@ -101,7 +101,7 @@ blockBigPicture.querySelector('.comments-count').textContent = arrObjectsPicture
 var comment = '';
 for (var i = 0; i < arrObjectsPicture[0].comments.length; i++) {
   comment += '<li class="social__comment"><img class="social__picture" src="img/avatar-'
-    + Math.floor(1 + Math.random() * 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
+    + getRandomNumber(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
     + arrObjectsPicture[0].comments[i] + '</p></li>';
 }
 
