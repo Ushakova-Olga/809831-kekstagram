@@ -147,7 +147,7 @@ var closePopup = function () {
   upload.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   uploadFileInput.value = '';
-  imgUploadPrev.className = 'img-upload__preview';
+  imgUploadPrev.className = '';
 };
 
 /* Обработчик события - клик на крестике */
@@ -174,7 +174,7 @@ pin.addEventListener('mouseup', function(evt){
 
 effectRadioButtons.addEventListener('change', function () {
   var checked = effectRadioButtons.querySelector('input:checked');
-  imgUploadPrev.className = 'img-upload__preview effects__preview--' + checked.value;
+  imgUploadPrev.className = 'effects__preview--' + checked.value;
 });
 
 /* Закрытие большой картинки */
