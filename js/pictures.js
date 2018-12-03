@@ -17,6 +17,25 @@ var DESCRIPT = [
   'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
   'Вот это тачка!'];
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+var pictureTemplate = document.querySelector('#picture')
+    .content
+    .querySelector('.picture');
+var listPictureElements = document.querySelector('.pictures');
+// Поле ввода имени файла
+var uploadFileInput = document.querySelector('#upload-file');
+// диалоговое окно .img-upload__overlay
+var upload = document.querySelector('.img-upload__overlay');
+var uploadClose = upload.querySelector('.img-upload__cancel');
+// картинка с предпросмотром эффектов
+var imgUploadPrev = upload.querySelector('.img-upload__preview img');
+// филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
+var effectRadioButtons = upload.querySelector('.img-upload__effects');
+var blockBigPicture = document.querySelector('.big-picture');
+var blockBigPictureCancel = document.querySelector('.big-picture__cancel');
+
 var getRandomItem = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
@@ -53,6 +72,25 @@ var generate = function (numObjects) {
   return arrayObjects;
 };
 
+/*  Функция, которая осуществляет показ большой картинки */
+var showBigPicture = function (pictureJsObject) {
+  blockBigPicture.classList.remove('hidden');
+  blockBigPicture.querySelector('.big-picture__img img').src = pictureJsObject.url;
+  blockBigPicture.querySelector('.likes-count').textContent = pictureJsObject.likes;
+  blockBigPicture.querySelector('.comments-count').textContent = pictureJsObject.comments.length;
+
+  var comment = '';
+  for (var i = 0; i < pictureJsObject.comments.length; i++) {
+    comment += '<li class="social__comment"><img class="social__picture" src="img/avatar-'
+      + getRandomNumber(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
+      + pictureJsObject.comments[i] + '</p></li>';
+  }
+
+  blockBigPicture.querySelector('.social__comments').innerHTML = comment;
+  blockBigPicture.querySelector('.social__caption').textContent = pictureJsObject.description;
+};
+
+
 /* создание DOM-элемента на основе JS-объекта */
 var createElementPicture = function (object, template) {
   var objectElement = template.cloneNode(true);
@@ -60,6 +98,11 @@ var createElementPicture = function (object, template) {
   objectElement.querySelector('.picture__likes').textContent = object.likes;
   objectElement.querySelector('.picture__comments').textContent = object.comments.length;
 
+  /* Здесь навешиваем на клик по маленькой картинке обработчик, который должен вызвать показ большой картинки */
+  objectElement.addEventListener('click', function () {
+    /* В качестве параметра передаем Js - объект, соответствующий данной маленькой картинке */
+    showBigPicture(object);
+  });
   return objectElement;
 };
 
@@ -67,47 +110,85 @@ var createElementPicture = function (object, template) {
 var createFragmentPictures = function (arr, template) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arr.length; i++) {
-    fragment.appendChild(createElementPicture(arr[i], template));
+    fragment.appendChild(createElementPicture(arr[i], template, i));
   }
   return fragment;
 };
-
 
 /* Создайте массив, состоящий из 25 сгенерированных JS объектов,
 которые будут описывать фотографии, размещённые другими пользователями*/
 var arrObjectsPicture = generate(25);
 
-
-/* На основе данных, созданных в предыдущем пункте
-и шаблона #picture создайте DOM-элементы, соответствующие фотографиям и
-заполните их данными из массива: */
-var pictureTemplate = document.querySelector('#picture')
-    .content
-    .querySelector('.picture');
-
-/* 3. Отрисуйте сгенерированные DOM-элементы в блок .pictures */
+/* Отрисуйте сгенерированные DOM-элементы в блок .pictures */
 var fragmentPictures = createFragmentPictures(arrObjectsPicture, pictureTemplate);
-var listPictureElements = document.querySelector('.pictures');
 listPictureElements.appendChild(fragmentPictures);
 
-/* 4. Покажите элемент .big-picture */
-var blockBigPicture = document.querySelector('.big-picture');
-blockBigPicture.classList.remove('hidden');
+// Задание 4
+/* Обработчик события изменеие в поле - имя файла */
+uploadFileInput.addEventListener('change', function () {
+  openPopup();
+});
 
-blockBigPicture.querySelector('.big-picture__img img').src = arrObjectsPicture[0].url;
-blockBigPicture.querySelector('.likes-count').textContent = arrObjectsPicture[0].likes;
-blockBigPicture.querySelector('.comments-count').textContent = arrObjectsPicture[0].comments.length;
+/* Обработчик события - нажатие на ESC */
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
 
-var comment = '';
-for (var i = 0; i < arrObjectsPicture[0].comments.length; i++) {
-  comment += '<li class="social__comment"><img class="social__picture" src="img/avatar-'
-    + getRandomNumber(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
-    + arrObjectsPicture[0].comments[i] + '</p></li>';
-}
+/* Функция открытия окна */
+var openPopup = function () {
+  upload.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
 
-blockBigPicture.querySelector('.social__comments').innerHTML = comment;
-blockBigPicture.querySelector('.social__caption').textContent = arrObjectsPicture[0].description;
+/* Функция закрытия окна */
+var closePopup = function () {
+  upload.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+  uploadFileInput.value = '';
+  imgUploadPrev.className = '';
+};
 
-/* 5. Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев  */
-blockBigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
-blockBigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
+/* Обработчик события - клик на крестике */
+uploadClose.addEventListener('click', function () {
+  closePopup();
+});
+
+/* Обработчик события - нажатие Enter на крестике */
+uploadClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});
+
+// Пока не могла доделать и отладить потому что сегодня без мышки, с тач падом
+/* var pin = document.querySelector('.effect-level__pin');
+console.log(pin);
+pin.addEventListener('mouseup', function(evt){
+  var procent;
+  console.log(evt);
+  console.log(pin);
+  procent= 100 * evt.offsetX / 455;
+});*/
+
+effectRadioButtons.addEventListener('change', function () {
+  var checked = effectRadioButtons.querySelector('input:checked');
+  imgUploadPrev.className = 'effects__preview--' + checked.value;
+});
+
+/* Закрытие большой картинки */
+blockBigPictureCancel.addEventListener('click', function () {
+  blockBigPicture.classList.add('hidden');
+});
+
+var onBigPictureEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    blockBigPicture.classList.add('hidden');
+  }
+};
+document.addEventListener('keydown', onBigPictureEscPress);
+
+/* Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев  */
+/* blockBigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
+blockBigPicture.querySelector('.comments-loader').classList.add('visually-hidden');*/
