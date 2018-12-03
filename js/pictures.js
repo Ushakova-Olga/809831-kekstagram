@@ -30,7 +30,7 @@ var uploadFileInput = document.querySelector('#upload-file');
 var upload = document.querySelector('.img-upload__overlay');
 var uploadClose = upload.querySelector('.img-upload__cancel');
 // картинка с предпросмотром эффектов
-var imgUploadPrev = upload.querySelector('.img-upload__preview');
+var imgUploadPrev = upload.querySelector('.img-upload__preview img');
 // филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
 var effectRadioButtons = upload.querySelector('.img-upload__effects');
 var blockBigPicture = document.querySelector('.big-picture');
