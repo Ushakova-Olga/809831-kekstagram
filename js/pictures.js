@@ -19,6 +19,8 @@ var DESCRIPT = [
 
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
+var MAX_HASHTAGS = 5;
+var MAX_LENGTH_HASHTAG = 20;
 
 var pictureTemplate = document.querySelector('#picture')
     .content
@@ -200,57 +202,46 @@ inputHash.addEventListener('input', function (evt) {
   var target = evt.target;
   /* Удалить повторяющиеся пробелы в строке, первый и последний пробел при наличии
   чтобы избежать создания пустых элементов в массиве */
-  var value = target.value.replace(/\s+/g, ' ').trim();
+  var value = target.value.replace(/\s+/g, ' ').trim().toLowerCase();
   var hashArr = value.split(' ');
-  var invalidSplit = false;
-  var moreLength5 = false;
-  var moreLength20 = false;
-  var onlyHash = false;
-  var notFirstHash = false;
-  var equalHash = false;
+  var hashArr2 = value.split('#').slice(1);
+  var errorMessage = '';
 
-  if ((value.indexOf(',') > -1) || (target.value.indexOf(';') > -1)) {
-    /* хэш-теги разделяются пробелами; */
-    invalidSplit = true;
-  } else if (hashArr.length > 5) {
+  if (hashArr.length > MAX_HASHTAGS) {
     /* нельзя указать больше пяти хэш-тегов; */
-    moreLength5 = true;
+    errorMessage = 'Хеш-тегов может быть не более 5-ти';
   } else {
     for (var i = 0; i < hashArr.length; i++) {
-      for (var j = 0; j < i; j++) {
-        /* теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом.*/
-        /* один и тот же хэш-тег не может быть использован дважды; */
-        if ((hashArr[i].toLowerCase() === hashArr[j].toLowerCase()) && (hashArr[i].length > 0)) {
-          equalHash = true;
-        }
+      var hashtag = hashArr[i];
+      var hashtagsBefore = hashArr.slice(0, Math.max(0, i));
+      /* один и тот же хэш-тег не может быть использован дважды; */
+      if (hashtagsBefore.indexOf(hashtag) > -1) {
+        errorMessage = 'Не может быть двух одинаковых тегов';
+        break;
       }
-
-      if (hashArr[i].length > 20) {
+      if (hashtag.length > MAX_LENGTH_HASHTAG) {
         /* максимальная длина одного хэш-тега 20 символов, включая решётку;*/
-        moreLength20 = true;
-      } else if ((hashArr[i].length === 1) && (hashArr[i][0] === '#')) {
+        errorMessage = 'Хеш-теги не могут быть больше 20-ти символов';
+        break;
+      } else if ((hashtag.length === 1) && (hashtag[0] === '#')) {
         /* хеш-тег не может состоять только из одной решётки;*/
-        onlyHash = true;
-      } else if ((hashArr[i][0] !== '#') && (hashArr[i].length > 0)) {
+        errorMessage = 'Хеш-теги не могут состоять из одной решетки';
+        break;
+      } else if ((hashtag[0] !== '#') && (hashtag.length > 0)) {
         /* хэш-тег начинается с символа # (решётка);*/
-        notFirstHash = true;
+        errorMessage = 'Первый символ у хеш-тега должен быть решеткой';
+        break;
       }
+    }
+
+    if ((hashArr.length !== hashArr2.length) && (hashArr[0] !== '')) {
+      /* второе условие добавлено на тот случай когда пользователь
+      сначала начал вводить теги, а потом удалил, в этом случае событие вызывается и массивы оказываются разной
+      длины, в первом оказывается пустой элемент */
+      /* хэш-теги разделяются пробелами; */
+      errorMessage = 'Разделяйте хеш-теги пробелами';
     }
   }
 
-  if (invalidSplit) {
-    target.setCustomValidity('Разделяйте хеш-теги пробелами');
-  } else if (moreLength5) {
-    target.setCustomValidity('Хеш-тегов может быть не более 5-ти');
-  } else if (moreLength20) {
-    target.setCustomValidity('Хеш-теги не могут быть больше 20-ти символов');
-  } else if (onlyHash) {
-    target.setCustomValidity('Хеш-теги не могут состоять из одной решетки');
-  } else if (notFirstHash) {
-    target.setCustomValidity('Первый символ у хеш-тега должен быть решеткой');
-  } else if (equalHash) {
-    target.setCustomValidity('Не может быть двух одинаковых тегов');
-  } else {
-    target.setCustomValidity('');
-  }
+  target.setCustomValidity(errorMessage);
 });
