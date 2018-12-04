@@ -19,6 +19,8 @@ var DESCRIPT = [
 
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
+var MAX_HASHTAGS = 5;
+var MAX_LENGTH_HASHTAG = 20;
 
 var pictureTemplate = document.querySelector('#picture')
     .content
@@ -35,6 +37,7 @@ var imgUploadPrev = upload.querySelector('.img-upload__preview img');
 var effectRadioButtons = upload.querySelector('.img-upload__effects');
 var blockBigPicture = document.querySelector('.big-picture');
 var blockBigPictureCancel = document.querySelector('.big-picture__cancel');
+var inputHash = document.querySelector('.text__hashtags');
 
 var getRandomItem = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -131,7 +134,9 @@ uploadFileInput.addEventListener('change', function () {
 
 /* Обработчик события - нажатие на ESC */
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  /* если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к
+  закрытию формы редактирования изображения.*/
+  if ((evt.keyCode === ESC_KEYCODE) && (inputHash !== document.activeElement)) {
     closePopup();
   }
 };
@@ -192,3 +197,51 @@ document.addEventListener('keydown', onBigPictureEscPress);
 /* Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев  */
 /* blockBigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 blockBigPicture.querySelector('.comments-loader').classList.add('visually-hidden');*/
+
+inputHash.addEventListener('input', function (evt) {
+  var target = evt.target;
+  /* Удалить повторяющиеся пробелы в строке, первый и последний пробел при наличии
+  чтобы избежать создания пустых элементов в массиве */
+  var value = target.value.replace(/\s+/g, ' ').trim().toLowerCase();
+  var hashArr = value.split(' ');
+  var hashArr2 = value.split('#').slice(1);
+  var errorMessage = '';
+
+  if (hashArr.length > MAX_HASHTAGS) {
+    /* нельзя указать больше пяти хэш-тегов; */
+    errorMessage = 'Хеш-тегов может быть не более 5-ти';
+  } else {
+    for (var i = 0; i < hashArr.length; i++) {
+      var hashtag = hashArr[i];
+      var hashtagsBefore = hashArr.slice(0, Math.max(0, i));
+      /* один и тот же хэш-тег не может быть использован дважды; */
+      if (hashtagsBefore.indexOf(hashtag) > -1) {
+        errorMessage = 'Не может быть двух одинаковых тегов';
+        break;
+      }
+      if (hashtag.length > MAX_LENGTH_HASHTAG) {
+        /* максимальная длина одного хэш-тега 20 символов, включая решётку;*/
+        errorMessage = 'Хеш-теги не могут быть больше 20-ти символов';
+        break;
+      } else if ((hashtag.length === 1) && (hashtag[0] === '#')) {
+        /* хеш-тег не может состоять только из одной решётки;*/
+        errorMessage = 'Хеш-теги не могут состоять из одной решетки';
+        break;
+      } else if ((hashtag[0] !== '#') && (hashtag.length > 0)) {
+        /* хэш-тег начинается с символа # (решётка);*/
+        errorMessage = 'Первый символ у хеш-тега должен быть решеткой';
+        break;
+      }
+    }
+
+    if ((hashArr.length !== hashArr2.length) && (hashArr[0] !== '')) {
+      /* второе условие добавлено на тот случай когда пользователь
+      сначала начал вводить теги, а потом удалил, в этом случае событие вызывается и массивы оказываются разной
+      длины, в первом оказывается пустой элемент */
+      /* хэш-теги разделяются пробелами; */
+      errorMessage = 'Разделяйте хеш-теги пробелами';
+    }
+  }
+
+  target.setCustomValidity(errorMessage);
+});
