@@ -39,6 +39,11 @@ var blockBigPicture = document.querySelector('.big-picture');
 var blockBigPictureCancel = document.querySelector('.big-picture__cancel');
 var inputHash = document.querySelector('.text__hashtags');
 
+var pin = document.querySelector('.effect-level__pin');
+var levelDepth = document.querySelector('.effect-level__depth');
+var levelVal = document.querySelector('.effect-level__value');
+var slider = document.querySelector('.img-upload__effect-level.effect-level');
+
 var getRandomItem = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
@@ -167,19 +172,57 @@ uploadClose.addEventListener('keydown', function (evt) {
   }
 });
 
-// Пока не могла доделать и отладить потому что сегодня без мышки, с тач падом
-/* var pin = document.querySelector('.effect-level__pin');
-console.log(pin);
-pin.addEventListener('mouseup', function(evt){
-  var procent;
-  console.log(evt);
-  console.log(pin);
-  procent= 100 * evt.offsetX / 455;
-});*/
+/* Установка слайдера в зависимости от уровня глубины эффекта depth */
+var setSlider = function (depth) {
+  pin.style.left = Math.ceil(depth * 453 / 100) + 'px';
+  levelDepth.style.width = depth + '%';
+
+  levelVal.value = depth;
+  if (imgUploadPrev.className === 'effects__preview--chrome') {
+    imgUploadPrev.style = 'filter: grayscale(' + depth / 100 + ');';
+  } else if (imgUploadPrev.className === 'effects__preview--sepia') {
+    imgUploadPrev.style = 'filter: sepia(' + depth / 100 + ');';
+  } else if (imgUploadPrev.className === 'effects__preview--marvin') {
+    imgUploadPrev.style = 'filter: invert(' + depth + '%);';
+  } else if (imgUploadPrev.className === 'effects__preview--phobos') {
+    imgUploadPrev.style = 'filter: blur(' + (3 * depth / 100) + 'px);';
+  } else if (imgUploadPrev.className === 'effects__preview--heat') {
+    imgUploadPrev.style = 'filter: brightness(' + (1 + 2 * depth / 100) + ');';
+  }
+};
+
+/* Функция для инициализации значений слайдера по умолчанию */
+var initEffect = function () {
+  var checked = effectRadioButtons.querySelector('input:checked');
+  imgUploadPrev.className = 'effects__preview--' + checked.value;
+
+  if (imgUploadPrev.className === 'effects__preview--none') {
+    slider.classList.add('hidden');
+    imgUploadPrev.style = '';
+  } else {
+    slider.classList.remove('hidden');
+  }
+
+  setSlider(100);
+};
+
+/* Установка эффектов и слайдера в первоначальное состояние */
+initEffect();
 
 effectRadioButtons.addEventListener('change', function () {
   var checked = effectRadioButtons.querySelector('input:checked');
   imgUploadPrev.className = 'effects__preview--' + checked.value;
+
+  if (imgUploadPrev.className === 'effects__preview--none') {
+    slider.classList.add('hidden');
+    imgUploadPrev.style = '';
+  } else {
+    slider.classList.remove('hidden');
+  }
+
+  /* При переключении эффектов, уровень насыщенности сбрасывается
+  до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться.*/
+  setSlider(100);
 });
 
 /* Закрытие большой картинки */
@@ -244,4 +287,46 @@ inputHash.addEventListener('input', function (evt) {
   }
 
   target.setCustomValidity(errorMessage);
+});
+
+/* Перемещение слайдера */
+pin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  /* Запомнить точки, с которых начали перетаскивать */
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  /* При каждом движении мыши надо обновить координаты */
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var pinX = pin.offsetLeft - shift.x;
+    if ((pinX < 453) && (pinX > 0)) {
+      setSlider(Math.round(100 * pinX / 453));
+    }
+  };
+
+  /* При отпускании кнопки мыши надо перестать слушать события мыши */
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  /* Обработчики перемещения мыши и отпускания мыши */
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
