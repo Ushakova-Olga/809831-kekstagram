@@ -21,6 +21,7 @@ var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var MAX_HASHTAGS = 5;
 var MAX_LENGTH_HASHTAG = 20;
+var MAX_SLIDER_LENGTH = 453;
 
 var pictureTemplate = document.querySelector('#picture')
     .content
@@ -174,7 +175,7 @@ uploadClose.addEventListener('keydown', function (evt) {
 
 /* Установка слайдера в зависимости от уровня глубины эффекта depth */
 var setSlider = function (depth) {
-  pin.style.left = Math.ceil(depth * 453 / 100) + 'px';
+  pin.style.left = Math.ceil(depth * MAX_SLIDER_LENGTH / 100) + 'px';
   levelDepth.style.width = depth + '%';
 
   levelVal.value = depth;
@@ -313,8 +314,8 @@ pin.addEventListener('mousedown', function (evt) {
     };
 
     var pinX = pin.offsetLeft - shift.x;
-    if ((pinX < 453) && (pinX > 0)) {
-      setSlider(Math.round(100 * pinX / 453));
+    if ((pinX < MAX_SLIDER_LENGTH) && (pinX > 0)) {
+      setSlider(Math.round(100 * pinX / MAX_SLIDER_LENGTH));
     }
   };
 
