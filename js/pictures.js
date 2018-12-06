@@ -158,7 +158,9 @@ var closePopup = function () {
   upload.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   uploadFileInput.value = '';
-  imgUploadPrev.className = '';
+  /* На всякий случай сброс на значение по умолчанию для слайдера
+  и эффектов 100%, эффект берется из формы последний выбранный пользователем */
+  setSlider(MAX_SLIDER_LENGTH);
 };
 
 /* Обработчик события - клик на крестике */
@@ -173,57 +175,41 @@ uploadClose.addEventListener('keydown', function (evt) {
   }
 });
 
-/* Установка слайдера в зависимости от уровня глубины эффекта depth */
-var setSlider = function (depth) {
-  pin.style.left = Math.ceil(depth * MAX_SLIDER_LENGTH / 100) + 'px';
-  levelDepth.style.width = depth + '%';
+/* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
+var setSlider = function (xPin) {
+  var checked = effectRadioButtons.querySelector('input:checked');
+  imgUploadPrev.className = 'effects__preview--' + checked.value;
 
+  var depth = Math.round(100 * xPin / MAX_SLIDER_LENGTH);
+  pin.style.left = xPin + 'px';
+  levelDepth.style.width = depth + '%';
   levelVal.value = depth;
-  if (imgUploadPrev.className === 'effects__preview--chrome') {
+
+  if (checked.value === 'none') {
+    slider.classList.add('hidden');
+    imgUploadPrev.style = '';
+  } else {
+    slider.classList.remove('hidden');
+  }
+
+  if (checked.value === 'chrome') {
     imgUploadPrev.style = 'filter: grayscale(' + depth / 100 + ');';
-  } else if (imgUploadPrev.className === 'effects__preview--sepia') {
+  } else if (checked.value === 'sepia') {
     imgUploadPrev.style = 'filter: sepia(' + depth / 100 + ');';
-  } else if (imgUploadPrev.className === 'effects__preview--marvin') {
+  } else if (checked.value === 'marvin') {
     imgUploadPrev.style = 'filter: invert(' + depth + '%);';
-  } else if (imgUploadPrev.className === 'effects__preview--phobos') {
+  } else if (checked.value === 'phobos') {
     imgUploadPrev.style = 'filter: blur(' + (3 * depth / 100) + 'px);';
-  } else if (imgUploadPrev.className === 'effects__preview--heat') {
+  } else if (checked.value === 'heat') {
     imgUploadPrev.style = 'filter: brightness(' + (1 + 2 * depth / 100) + ');';
   }
 };
 
-/* Функция для инициализации значений слайдера по умолчанию */
-var initEffect = function () {
-  var checked = effectRadioButtons.querySelector('input:checked');
-  imgUploadPrev.className = 'effects__preview--' + checked.value;
-
-  if (imgUploadPrev.className === 'effects__preview--none') {
-    slider.classList.add('hidden');
-    imgUploadPrev.style = '';
-  } else {
-    slider.classList.remove('hidden');
-  }
-
-  setSlider(100);
-};
-
-/* Установка эффектов и слайдера в первоначальное состояние */
-initEffect();
+/* Установка эффектов и слайдера в первоначальное состояние 100% */
+setSlider(MAX_SLIDER_LENGTH);
 
 effectRadioButtons.addEventListener('change', function () {
-  var checked = effectRadioButtons.querySelector('input:checked');
-  imgUploadPrev.className = 'effects__preview--' + checked.value;
-
-  if (imgUploadPrev.className === 'effects__preview--none') {
-    slider.classList.add('hidden');
-    imgUploadPrev.style = '';
-  } else {
-    slider.classList.remove('hidden');
-  }
-
-  /* При переключении эффектов, уровень насыщенности сбрасывается
-  до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться.*/
-  setSlider(100);
+  setSlider(MAX_SLIDER_LENGTH);
 });
 
 /* Закрытие большой картинки */
@@ -315,7 +301,7 @@ pin.addEventListener('mousedown', function (evt) {
 
     var pinX = pin.offsetLeft - shift.x;
     if ((pinX < MAX_SLIDER_LENGTH) && (pinX > 0)) {
-      setSlider(Math.round(100 * pinX / MAX_SLIDER_LENGTH));
+      setSlider(pinX);
     }
   };
 
