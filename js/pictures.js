@@ -21,6 +21,7 @@ var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var MAX_HASHTAGS = 5;
 var MAX_LENGTH_HASHTAG = 20;
+var MAX_SLIDER_LENGTH = 453;
 
 var pictureTemplate = document.querySelector('#picture')
     .content
@@ -38,6 +39,11 @@ var effectRadioButtons = upload.querySelector('.img-upload__effects');
 var blockBigPicture = document.querySelector('.big-picture');
 var blockBigPictureCancel = document.querySelector('.big-picture__cancel');
 var inputHash = document.querySelector('.text__hashtags');
+
+var pin = document.querySelector('.effect-level__pin');
+var levelDepth = document.querySelector('.effect-level__depth');
+var levelVal = document.querySelector('.effect-level__value');
+var slider = document.querySelector('.img-upload__effect-level.effect-level');
 
 var getRandomItem = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -152,7 +158,9 @@ var closePopup = function () {
   upload.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   uploadFileInput.value = '';
-  imgUploadPrev.className = '';
+  /* На всякий случай сброс на значение по умолчанию для слайдера
+  и эффектов 100%, эффект берется из формы последний выбранный пользователем */
+  setSlider(MAX_SLIDER_LENGTH);
 };
 
 /* Обработчик события - клик на крестике */
@@ -167,19 +175,41 @@ uploadClose.addEventListener('keydown', function (evt) {
   }
 });
 
-// Пока не могла доделать и отладить потому что сегодня без мышки, с тач падом
-/* var pin = document.querySelector('.effect-level__pin');
-console.log(pin);
-pin.addEventListener('mouseup', function(evt){
-  var procent;
-  console.log(evt);
-  console.log(pin);
-  procent= 100 * evt.offsetX / 455;
-});*/
-
-effectRadioButtons.addEventListener('change', function () {
+/* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
+var setSlider = function (xPin) {
   var checked = effectRadioButtons.querySelector('input:checked');
   imgUploadPrev.className = 'effects__preview--' + checked.value;
+
+  var depth = Math.round(100 * xPin / MAX_SLIDER_LENGTH);
+  pin.style.left = xPin + 'px';
+  levelDepth.style.width = depth + '%';
+  levelVal.value = depth;
+
+  if (checked.value === 'none') {
+    slider.classList.add('hidden');
+    imgUploadPrev.style = '';
+  } else {
+    slider.classList.remove('hidden');
+  }
+
+  if (checked.value === 'chrome') {
+    imgUploadPrev.style = 'filter: grayscale(' + depth / 100 + ');';
+  } else if (checked.value === 'sepia') {
+    imgUploadPrev.style = 'filter: sepia(' + depth / 100 + ');';
+  } else if (checked.value === 'marvin') {
+    imgUploadPrev.style = 'filter: invert(' + depth + '%);';
+  } else if (checked.value === 'phobos') {
+    imgUploadPrev.style = 'filter: blur(' + (3 * depth / 100) + 'px);';
+  } else if (checked.value === 'heat') {
+    imgUploadPrev.style = 'filter: brightness(' + (1 + 2 * depth / 100) + ');';
+  }
+};
+
+/* Установка эффектов и слайдера в первоначальное состояние 100% */
+setSlider(MAX_SLIDER_LENGTH);
+
+effectRadioButtons.addEventListener('change', function () {
+  setSlider(MAX_SLIDER_LENGTH);
 });
 
 /* Закрытие большой картинки */
@@ -244,4 +274,46 @@ inputHash.addEventListener('input', function (evt) {
   }
 
   target.setCustomValidity(errorMessage);
+});
+
+/* Перемещение слайдера */
+pin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  /* Запомнить точки, с которых начали перетаскивать */
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  /* При каждом движении мыши надо обновить координаты */
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var pinX = pin.offsetLeft - shift.x;
+    if ((pinX < MAX_SLIDER_LENGTH) && (pinX > 0)) {
+      setSlider(pinX);
+    }
+  };
+
+  /* При отпускании кнопки мыши надо перестать слушать события мыши */
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  /* Обработчики перемещения мыши и отпускания мыши */
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
