@@ -3,15 +3,15 @@
 /* Модуль для работы с формой загрузки и редактирования картинки */
 (function () {
   // диалоговое окно .img-upload__overlay
-  /* var upload = document.querySelector('.img-upload__overlay');*/
+  var upload = document.querySelector('.img-upload__overlay');
   // Поле ввода имени файла
   var uploadFileInput = document.querySelector('#upload-file');
-  var uploadClose = window.util.upload.querySelector('.img-upload__cancel');
+  var uploadClose = upload.querySelector('.img-upload__cancel');
   // филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
-  var effectRadioButtons = window.util.upload.querySelector('.img-upload__effects');
+  var effectRadioButtons = upload.querySelector('.img-upload__effects');
   var inputHash = document.querySelector('.text__hashtags');
 
-  /* var pin = document.querySelector('.effect-level__pin');*/
+  var pin = document.querySelector('.effect-level__pin');
 
   /* Обработчик события изменение в поле - имя файла */
   uploadFileInput.addEventListener('change', function () {
@@ -29,13 +29,13 @@
 
   /* Функция открытия окна */
   var openPopup = function () {
-    window.util.upload.classList.remove('hidden');
+    upload.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
   /* Функция закрытия окна */
   var closePopup = function () {
-    window.util.upload.classList.add('hidden');
+    upload.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
     uploadFileInput.value = '';
     /* На всякий случай сброс на значение по умолчанию для слайдера
@@ -109,5 +109,5 @@
   });
 
   /* Перемещение слайдера */
-  window.util.pin.addEventListener('mousedown', window.slider.onPinMoved);
+  pin.addEventListener('mousedown', window.slider.onPinMoved);
 })();

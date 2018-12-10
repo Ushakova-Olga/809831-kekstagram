@@ -19,27 +19,18 @@
     'Вот это тачка!'];
 
   window.data = {
-    getRandomItem: function (arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    },
-    getRandomNumber: function (min, max) {
-      if ((min >= 0) && (max > 0) && (max > min)) {
-        return (min + Math.floor(Math.random() * (max - min + 1)));
-      }
-      return 0;
-    },
     /* Генерация массива JS объектов */
     generate: function (numObjects) {
       var arrayObjects = [];
       for (var i = 0; i < numObjects; i++) {
         var objectUrl = 'photos/' + (i + 1) + '.jpg';
-        var objectLikes = window.data.getRandomNumber(15, 200);
-        var objectDescription = window.data.getRandomItem(DESCRIPT);
-        var numberComments = window.data.getRandomNumber(0, 9);
+        var objectLikes = window.util.getRandomNumber(15, 200);
+        var objectDescription = window.util.getRandomItem(DESCRIPT);
+        var numberComments = window.util.getRandomNumber(0, 9);
         var objectComments = [];
 
         for (var j = 0; j < numberComments; j++) {
-          objectComments [j] = window.data.getRandomItem(COMMENT);
+          objectComments [j] = window.util.getRandomItem(COMMENT);
         }
 
         arrayObjects[i] = {
@@ -61,7 +52,7 @@
       /* Здесь навешиваем на клик по маленькой картинке обработчик, который должен вызвать показ большой картинки */
       objectElement.addEventListener('click', function () {
         /* В качестве параметра передаем Js - объект, соответствующий данной маленькой картинке */
-        window.bigpicture.showBigPicture(object);
+        window.bigPicture.show(object);
       });
       return objectElement;
     }

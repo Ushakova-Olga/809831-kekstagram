@@ -3,13 +3,13 @@
 /* Модуль для работы со слайдером */
 (function () {
   // диалоговое окно .img-upload__overlay
-  /* var upload = document.querySelector('.img-upload__overlay');*/
+  var upload = document.querySelector('.img-upload__overlay');
   // картинка с предпросмотром эффектов
   var imgUploadPrev = document.querySelector('.img-upload__preview img');
   // филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
-  var effectRadioButtons = window.util.upload.querySelector('.img-upload__effects');
+  var effectRadioButtons = upload.querySelector('.img-upload__effects');
 
-  /* var pin = document.querySelector('.effect-level__pin');*/
+  var pin = document.querySelector('.effect-level__pin');
   var levelDepth = document.querySelector('.effect-level__depth');
   var levelVal = document.querySelector('.effect-level__value');
   var slider = document.querySelector('.img-upload__effect-level.effect-level');
@@ -21,7 +21,7 @@
       imgUploadPrev.className = 'effects__preview--' + checked.value;
 
       var depth = Math.round(100 * xPin / window.util.MAX_SLIDER_LENGTH);
-      window.util.pin.style.left = xPin + 'px';
+      pin.style.left = xPin + 'px';
       levelDepth.style.width = depth + '%';
       levelVal.value = depth;
 
@@ -67,7 +67,7 @@
           y: moveEvt.clientY
         };
 
-        var pinX = window.util.pin.offsetLeft - shift.x;
+        var pinX = pin.offsetLeft - shift.x;
         if ((pinX < window.util.MAX_SLIDER_LENGTH) && (pinX > 0)) {
           window.slider.setSlider(pinX);
         }

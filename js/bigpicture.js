@@ -6,22 +6,22 @@
   var blockBigPictureCancel = document.querySelector('.big-picture__cancel');
 
   /*  Функция, которая осуществляет показ большой картинки */
-  window.bigpicture = {
-    showBigPicture: function (pictureJsObject) {
+  window.bigPicture = {
+    show: function (pictureObject) {
       blockBigPicture.classList.remove('hidden');
-      blockBigPicture.querySelector('.big-picture__img img').src = pictureJsObject.url;
-      blockBigPicture.querySelector('.likes-count').textContent = pictureJsObject.likes;
-      blockBigPicture.querySelector('.comments-count').textContent = pictureJsObject.comments.length;
+      blockBigPicture.querySelector('.big-picture__img img').src = pictureObject.url;
+      blockBigPicture.querySelector('.likes-count').textContent = pictureObject.likes;
+      blockBigPicture.querySelector('.comments-count').textContent = pictureObject.comments.length;
 
       var comment = '';
-      for (var i = 0; i < pictureJsObject.comments.length; i++) {
+      for (var i = 0; i < pictureObject.comments.length; i++) {
         comment += '<li class="social__comment"><img class="social__picture" src="img/avatar-'
-          + window.data.getRandomNumber(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
-          + pictureJsObject.comments[i] + '</p></li>';
+          + window.util.getRandomNumber(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
+          + pictureObject.comments[i] + '</p></li>';
       }
 
       blockBigPicture.querySelector('.social__comments').innerHTML = comment;
-      blockBigPicture.querySelector('.social__caption').textContent = pictureJsObject.description;
+      blockBigPicture.querySelector('.social__caption').textContent = pictureObject.description;
     }
   };
 
