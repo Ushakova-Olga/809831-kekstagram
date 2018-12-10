@@ -11,8 +11,6 @@
   var effectRadioButtons = upload.querySelector('.img-upload__effects');
   var inputHash = document.querySelector('.text__hashtags');
 
-  var pin = document.querySelector('.effect-level__pin');
-
   /* Обработчик события изменение в поле - имя файла */
   uploadFileInput.addEventListener('change', function () {
     openPopup();
@@ -107,7 +105,4 @@
 
     target.setCustomValidity(errorMessage);
   });
-
-  /* Перемещение слайдера */
-  pin.addEventListener('mousedown', window.slider.onPinMoved);
 })();
