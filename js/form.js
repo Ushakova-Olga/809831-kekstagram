@@ -105,4 +105,65 @@
 
     target.setCustomValidity(errorMessage);
   });
+
+  /* Задание 6 - Закрыть форму после загрузки и задать поля по умолчанию */
+  var form = document.querySelector('.img-upload__form');
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), function () {
+      effectRadioButtons.querySelector('#effect-heat').checked = 'true';
+      var description = upload.querySelector('.text__description');
+      inputHash.value = '';
+      description.value = '';
+      closePopup();
+      /* Сообщение при успешной загрузке изображения */
+      openCloseSuccessError('.success', '.success__button', '#success');
+    },
+    function () {
+      /* effectRadioButtons.querySelector('#effect-heat').checked='true';
+      var description = upload.querySelector('.text__description');
+      inputHash.value='';
+      description.value='';*/
+      closePopup();
+      /* Сообщение при ошибке */
+      openCloseSuccessError('.error', '.error__button', '#error');
+    });
+    evt.preventDefault();
+  });
+
+  var openCloseSuccessError = function (classWnd, classButton, template) {
+    var closeWnd = function () {
+      openedWnd.classList.add('visually-hidden');
+    };
+
+    try {
+      var openedWnd = document.querySelector('main').querySelector(classWnd);
+      var openedBtn = openedWnd.querySelector(classButton);
+
+      openedWnd.classList.remove('visually-hidden');
+    } catch (err) {
+      /* Если окно еще не было создано */
+      var templateWnd = document.querySelector(template)
+            .content
+            .querySelector(classWnd);
+      var node = templateWnd.cloneNode(true);
+      document.querySelector('main').appendChild(node);
+
+      openedWnd = document.querySelector('main').querySelector(classWnd);
+      openedBtn = openedWnd.querySelectorAll(classButton);
+
+      for (var i = 0; i < openedBtn.length; i++) {
+        openedBtn[i].addEventListener('click', function () {
+          closeWnd();
+        });
+
+        openedBtn[i].addEventListener('keydown', function (evt) {
+          window.util.isEnterEvent(evt, closeWnd);
+        });
+      }
+
+      document.addEventListener('keydown', function (evt) {
+        window.util.isEscEvent(evt, closeWnd);
+      });
+    }
+  };
 })();

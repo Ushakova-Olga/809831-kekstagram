@@ -15,9 +15,9 @@
 
       var comment = '';
       for (var i = 0; i < pictureObject.comments.length; i++) {
-        comment += '<li class="social__comment"><img class="social__picture" src="img/avatar-'
-          + window.util.getRandomNumber(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
-          + pictureObject.comments[i] + '</p></li>';
+        comment += '<li class="social__comment"><img class="social__picture" src="' + pictureObject.comments[i].avatar + '" '
+          + 'alt="Аватар комментатора фотографии" width="35" height="35"><p class="social__text">'
+          + pictureObject.comments[i].message + '</p></li>';
       }
 
       blockBigPicture.querySelector('.social__comments').innerHTML = comment;
