@@ -110,60 +110,92 @@
   var form = document.querySelector('.img-upload__form');
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
-      effectRadioButtons.querySelector('#effect-heat').checked = 'true';
-      var description = upload.querySelector('.text__description');
-      inputHash.value = '';
-      description.value = '';
+      form.reset();
       closePopup();
       /* Сообщение при успешной загрузке изображения */
-      openCloseSuccessError('.success', '.success__button', '#success');
+      openSuccess();
     },
     function () {
-      /* effectRadioButtons.querySelector('#effect-heat').checked='true';
-      var description = upload.querySelector('.text__description');
-      inputHash.value='';
-      description.value='';*/
+      form.reset();
       closePopup();
       /* Сообщение при ошибке */
-      openCloseSuccessError('.error', '.error__button', '#error');
+      openError();
     });
     evt.preventDefault();
   });
 
-  var openCloseSuccessError = function (classWnd, classButton, template) {
-    var closeWnd = function () {
-      openedWnd.classList.add('visually-hidden');
+  var openSuccess = function () {
+    var onSuccessEscPress = function (evt) {
+      window.util.isEscEvent(evt, closeSuccessESC);
+    };
+    var closeSuccess = function () {
+      /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента
+      так поняла что должны все обработчики удалиться*/
+      document.querySelector('main').removeChild(node);
     };
 
-    try {
-      var openedWnd = document.querySelector('main').querySelector(classWnd);
-      var openedBtn = openedWnd.querySelector(classButton);
+    var closeSuccessESC = function () {
+      /* Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
+      при удалении дочернего окна  кнопками */
+      document.removeEventListener('keydown', onSuccessEscPress);
+      document.querySelector('main').removeChild(node);
+    };
 
-      openedWnd.classList.remove('visually-hidden');
-    } catch (err) {
-      /* Если окно еще не было создано */
-      var templateWnd = document.querySelector(template)
-            .content
-            .querySelector(classWnd);
-      var node = templateWnd.cloneNode(true);
-      document.querySelector('main').appendChild(node);
+    var templateWnd = document.querySelector('#success')
+          .content
+          .querySelector('.success');
 
-      openedWnd = document.querySelector('main').querySelector(classWnd);
-      openedBtn = openedWnd.querySelectorAll(classButton);
+    var node = templateWnd.cloneNode(true);
+    document.querySelector('main').appendChild(node);
+    var openedWnd = document.querySelector('main').querySelector('.success');
+    var openedBtn = openedWnd.querySelector('.success__button');
 
-      for (var i = 0; i < openedBtn.length; i++) {
-        openedBtn[i].addEventListener('click', function () {
-          closeWnd();
-        });
+    openedBtn.addEventListener('click', function () {
+      closeSuccess();
+    });
 
-        openedBtn[i].addEventListener('keydown', function (evt) {
-          window.util.isEnterEvent(evt, closeWnd);
-        });
-      }
+    openedBtn.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, closeSuccess);
+    });
 
-      document.addEventListener('keydown', function (evt) {
-        window.util.isEscEvent(evt, closeWnd);
+    document.addEventListener('keydown', onSuccessEscPress);
+  };
+
+  var openError = function () {
+    var onErrorEscPress = function (evt) {
+      window.util.isEscEvent(evt, closeErrorESC);
+    };
+    var closeError = function () {
+      /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента
+      так поняла что должны все обработчики удалиться*/
+      document.querySelector('main').removeChild(node);
+    };
+
+    var closeErrorESC = function () {
+      /* Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
+      при удалении дочернего окна  кнопками */
+      document.removeEventListener('keydown', onErrorEscPress);
+      document.querySelector('main').removeChild(node);
+    };
+
+    var templateWnd = document.querySelector('#error')
+          .content
+          .querySelector('.error');
+
+    var node = templateWnd.cloneNode(true);
+    document.querySelector('main').appendChild(node);
+    var openedWnd = document.querySelector('main').querySelector('.error');
+    var openedBtn = openedWnd.querySelectorAll('.error__button');
+
+    for (var i = 0; i < openedBtn.length; i++) {
+      openedBtn[i].addEventListener('click', function () {
+        closeError();
+      });
+
+      openedBtn[i].addEventListener('keydown', function (evt) {
+        window.util.isEnterEvent(evt, closeError);
       });
     }
+    document.addEventListener('keydown', onErrorEscPress);
   };
 })();

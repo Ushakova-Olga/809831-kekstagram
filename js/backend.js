@@ -6,16 +6,18 @@
 
   window.backend = {
     load: function (onLoad, onError) {
-      var loadRequest = createRequestJson('GET', URL_LOAD, onLoad, onError);
+      var loadRequest = createRequestJson(onLoad, onError);
+      loadRequest.open('GET', URL_LOAD);
       loadRequest.send();
     },
     save: function (data, onLoad, onError) {
-      var saveRequest = createRequestJson('POST', URL_SAVE, onLoad, onError);
+      var saveRequest = createRequestJson(onLoad, onError);
+      saveRequest.open('POST', URL_SAVE);
       saveRequest.send(data);
     }
   };
 
-  var createRequestJson = function (method, url, onLoad, onError) {
+  var createRequestJson = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -34,7 +36,6 @@
     });
 
     xhr.timeout = 10000; // 10s
-    xhr.open(method, url);
     return xhr;
   };
 })();
