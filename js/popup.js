@@ -5,16 +5,12 @@
   window.popup = {
     openSuccess: function () {
       var onSuccessEscPress = function (evt) {
-        window.util.isEscEvent(evt, closeSuccessESC);
+        window.util.isEscEvent(evt, closeSuccess);
       };
       var closeSuccess = function () {
         /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента
-        так поняла что должны все обработчики удалиться*/
-        document.querySelector('main').removeChild(node);
-      };
-
-      var closeSuccessESC = function () {
-        /* Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
+        так поняла что должны все обработчики удалиться
+        Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
         при удалении дочернего окна  кнопками */
         document.removeEventListener('keydown', onSuccessEscPress);
         document.querySelector('main').removeChild(node);
@@ -37,16 +33,12 @@
     },
     openError: function () {
       var onErrorEscPress = function (evt) {
-        window.util.isEscEvent(evt, closeErrorESC);
+        window.util.isEscEvent(evt, closeError);
       };
       var closeError = function () {
         /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента
-        так поняла что должны все обработчики удалиться*/
-        document.querySelector('main').removeChild(node);
-      };
-
-      var closeErrorESC = function () {
-        /* Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
+        так поняла что должны все обработчики удалиться
+        Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
         при удалении дочернего окна  кнопками */
         document.removeEventListener('keydown', onErrorEscPress);
         document.querySelector('main').removeChild(node);
