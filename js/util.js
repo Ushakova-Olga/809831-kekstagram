@@ -2,10 +2,10 @@
 
 /* Служебные функции и константы */
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
 
   window.util = {
+    ESC_KEYCODE: 27,
+    ENTER_KEYCODE: 13,
     MAX_SLIDER_LENGTH: 453,
     MAX_HASHTAGS: 5,
     MAX_LENGTH_HASHTAG: 20,
@@ -18,15 +18,12 @@
       }
       return 0;
     },
-    isEscEvent: function (evt, action) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        action();
-      }
-    },
-    isEnterEvent: function (evt, action) {
-      if (evt.keyCode === ENTER_KEYCODE) {
-        action();
-      }
+    createKeydownHandler: function (action, keyCode) {
+      return (function (evt) {
+        if (evt.keyCode === keyCode) {
+          action();
+        }
+      });
     }
   };
 })();
