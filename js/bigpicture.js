@@ -32,10 +32,6 @@
   /* Закрытие большой картинки */
   blockBigPictureCancel.addEventListener('click', closeBigPicture);
 
-  /*document.addEventListener('keydown', function (evt) {
-    window.util.isEscEvent(evt, closeBigPicture);
-  });*/
-
   document.addEventListener('keydown', window.util.createKeydownHandler(closeBigPicture, window.util.ESC_KEYCODE));
 
   /* Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев  */

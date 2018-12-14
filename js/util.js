@@ -20,16 +20,6 @@
       }
       return 0;
     },
-  /*  isEscEvent: function (evt, action) {
-      if (evt.keyCode === window.util.ESC_KEYCODE) {
-        action();
-      }
-    },
-    isEnterEvent: function (evt, action) {
-      if (evt.keyCode === window.util.ENTER_KEYCODE) {
-        action();
-      }
-    },*/
     createKeydownHandler: function (action, keyCode) {
       return (function (evt) {
         if (evt.keyCode === keyCode) {
