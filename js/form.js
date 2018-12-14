@@ -45,9 +45,7 @@
   });
 
   /* Обработчик события - нажатие Enter на крестике */
-  uploadClose.addEventListener('keydown', function (evt) {
-    window.util.isEnterEvent(evt, closePopup);
-  });
+  uploadClose.addEventListener('keydown', window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE));
 
   /* Установка эффектов и слайдера в первоначальное состояние 100% */
   window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);

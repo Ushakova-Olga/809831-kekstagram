@@ -2,8 +2,6 @@
 
 /* Служебные функции и константы */
 (function () {
-/*  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;*/
 
   window.util = {
     ESC_KEYCODE: 27,
