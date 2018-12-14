@@ -16,29 +16,27 @@
     openPopup();
   });
 
-  /* Обработчик события - нажатие на ESC */
-  var onPopupEscPress = function (evt) {
+  /* Функция закрытия окна */
+  var closePopup = function () {
     /* если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к
     закрытию формы редактирования изображения.*/
     if (inputHash !== document.activeElement) {
-      window.util.isEscEvent(evt, closePopup);
+      upload.classList.add('hidden');
+      document.removeEventListener('keydown', onPopupEscPress);
+      uploadFileInput.value = '';
+      /* На всякий случай сброс на значение по умолчанию для слайдера
+      и эффектов 100%, эффект берется из формы последний выбранный пользователем */
+      window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
     }
   };
+
+  /* Обработчик события - нажатие на ESC */
+  var onPopupEscPress = window.util.createKeydownHandler(closePopup, window.util.ESC_KEYCODE);
 
   /* Функция открытия окна */
   var openPopup = function () {
     upload.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
-  };
-
-  /* Функция закрытия окна */
-  var closePopup = function () {
-    upload.classList.add('hidden');
-    document.removeEventListener('keydown', onPopupEscPress);
-    uploadFileInput.value = '';
-    /* На всякий случай сброс на значение по умолчанию для слайдера
-    и эффектов 100%, эффект берется из формы последний выбранный пользователем */
-    window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
   };
 
   /* Обработчик события - клик на крестике */
