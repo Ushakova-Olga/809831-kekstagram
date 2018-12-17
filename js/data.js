@@ -18,6 +18,8 @@
     'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
     'Вот это тачка!'];
 
+  var blockBigPicture = document.querySelector('.big-picture');
+
   window.data = {
     /* Генерация массива JS объектов */
     generate: function (numObjects) {
@@ -51,8 +53,15 @@
 
       /* Здесь навешиваем на клик по маленькой картинке обработчик, который должен вызвать показ большой картинки */
       objectElement.addEventListener('click', function () {
+        var currentCommentsNum = 5;
         /* В качестве параметра передаем Js - объект, соответствующий данной маленькой картинке */
         window.bigPicture.show(object);
+
+        var loader = blockBigPicture.querySelector('.social__comments-loader');
+        loader.addEventListener('click', function () {
+          currentCommentsNum += 5;
+          window.bigPicture.showNextComments(object, currentCommentsNum);
+        });
       });
       return objectElement;
     }
