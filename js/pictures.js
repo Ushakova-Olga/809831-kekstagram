@@ -9,36 +9,18 @@
   var picturesArr = [];
   var picturesCopyArr = [];
 
-  /* функция заполнения блока DOM-элементами на основе массива JS-объектов */
-  /* var createFragmentPictures = function (arr, template) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-
-      fragment.appendChild(window.data.createElementPicture(arr[i], template));
-    }
-    return fragment;
-  };*/
-
-  /* Создайте массив, состоящий из 25 сгенерированных JS объектов,
-  которые будут описывать фотографии, размещённые другими пользователями*/
-  /* var arrObjectsPicture = window.data.generate(25);*/
-
-  /* Отрисуйте сгенерированные DOM-элементы в блок .pictures */
-  /* var fragmentPictures = createFragmentPictures(arrObjectsPicture, pictureTemplate);
-  listPictureElements.appendChild(fragmentPictures);*/
-
-  /* Задание 6 */
+  /* Удаляем картинки из DOM */
   var clean = function () {
-
-    for (var i = 0; i < picturesCopyArr.length; i++) {
-      listPictureElements.removeChild(listPictureElements.querySelector('.picture'));
+    var delPic = listPictureElements.querySelectorAll('.picture');
+    for (var i = 0; i < delPic.length; i++) {
+      listPictureElements.removeChild(delPic[i]);
     }
   };
 
   var renderPictures = function (pictures) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pictures.length; i++) {
-      fragment.appendChild(window.data.createElementPicture(pictures[i], pictureTemplate));
+      fragment.appendChild(createElementPicture(pictures[i], pictureTemplate));
     }
     listPictureElements.appendChild(fragment);
   };
@@ -66,7 +48,7 @@
   var getRandomElements = function (pictures, n) {
     var result;
     var picturesResult = [];
-    picturesResult[0] = pictures[window.util.getRandomNumber(0, pictures.length)];
+    picturesResult[0] = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
     if (n >= 2) {
       for (var i = 1; i < n; i++) {
         result = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
@@ -79,6 +61,19 @@
     return picturesResult;
   };
 
+  var createElementPicture = function (object, template) {
+  /* создание DOM-элемента на основе JS-объекта */
+    var objectElement = template.cloneNode(true);
+    objectElement.querySelector('.picture__img').src = object.url;
+    objectElement.querySelector('.picture__likes').textContent = object.likes;
+    objectElement.querySelector('.picture__comments').textContent = object.comments.length;
+
+    objectElement.addEventListener('click', function () {
+      window.bigPicture.openBigPicture(object);
+    });
+    return objectElement;
+  };
+
   window.backend.load(successHandler, errorHandler);
 
   var filters = document.querySelector('.img-filters');
@@ -89,8 +84,6 @@
 
   filterPopular.addEventListener('click', function () {
     clean();
-    picturesCopyArr = [];
-    picturesCopyArr = picturesArr.slice();
     renderPictures(picturesArr);
   });
 
@@ -115,6 +108,4 @@
     });
     renderPictures(picturesCopyArr);
   });
-
-
 })();
