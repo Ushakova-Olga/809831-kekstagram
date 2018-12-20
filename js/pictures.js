@@ -5,6 +5,7 @@
   var pictureTemplate = document.querySelector('#picture')
       .content
       .querySelector('.picture');
+
   var listPictureElements = document.querySelector('.pictures');
   var picturesArr = [];
   var picturesCopyArr = [];
@@ -69,7 +70,7 @@
     objectElement.querySelector('.picture__comments').textContent = object.comments.length;
 
     objectElement.addEventListener('click', function () {
-      window.bigPicture.openBigPicture(object);
+      window.bigPicture.open(object);
     });
     return objectElement;
   };
