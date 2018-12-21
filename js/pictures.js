@@ -5,35 +5,32 @@
   var pictureTemplate = document.querySelector('#picture')
       .content
       .querySelector('.picture');
+
   var listPictureElements = document.querySelector('.pictures');
+  var picturesArr = [];
+  var picturesCopyArr = [];
 
-  /* функция заполнения блока DOM-элементами на основе массива JS-объектов */
-  /* var createFragmentPictures = function (arr, template) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-
-      fragment.appendChild(window.data.createElementPicture(arr[i], template));
+  /* Удаляем картинки из DOM */
+  var clean = function () {
+    var delPic = listPictureElements.querySelectorAll('.picture');
+    for (var i = 0; i < delPic.length; i++) {
+      listPictureElements.removeChild(delPic[i]);
     }
-    return fragment;
-  };*/
+  };
 
-  /* Создайте массив, состоящий из 25 сгенерированных JS объектов,
-  которые будут описывать фотографии, размещённые другими пользователями*/
-  /* var arrObjectsPicture = window.data.generate(25);*/
-
-  /* Отрисуйте сгенерированные DOM-элементы в блок .pictures */
-  /* var fragmentPictures = createFragmentPictures(arrObjectsPicture, pictureTemplate);
-  listPictureElements.appendChild(fragmentPictures);*/
-
-  /* Задание 6 */
+  var renderPictures = function (pictures) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < pictures.length; i++) {
+      fragment.appendChild(createElementPicture(pictures[i], pictureTemplate));
+    }
+    listPictureElements.appendChild(fragment);
+  };
 
   /* В случае если данные успешно получены */
   var successHandler = function (pictures) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pictures.length; i++) {
-      fragment.appendChild(window.data.createElementPicture(pictures[i], pictureTemplate));
-    }
-    listPictureElements.appendChild(fragment);
+    picturesArr = pictures;
+    renderPictures(pictures);
+    picturesCopyArr = picturesArr.slice();
   };
 
   var errorHandler = function (errorMessage) {
@@ -49,6 +46,67 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
+  var getRandomElements = function (pictures, n) {
+    var result;
+    var picturesResult = [];
+    picturesResult[0] = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
+    if (n >= 2) {
+      for (var i = 1; i < n; i++) {
+        result = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
+        while (picturesResult.indexOf(result) !== -1) {
+          result = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
+        }
+        picturesResult[i] = result;
+      }
+    }
+    return picturesResult;
+  };
+
+  var createElementPicture = function (object, template) {
+  /* создание DOM-элемента на основе JS-объекта */
+    var objectElement = template.cloneNode(true);
+    objectElement.querySelector('.picture__img').src = object.url;
+    objectElement.querySelector('.picture__likes').textContent = object.likes;
+    objectElement.querySelector('.picture__comments').textContent = object.comments.length;
+
+    objectElement.addEventListener('click', function () {
+      window.bigPicture.open(object);
+    });
+    return objectElement;
+  };
+
   window.backend.load(successHandler, errorHandler);
-  /* window.backend.loadJsonp(successHandler, errorHandler);*/
+
+  var filters = document.querySelector('.img-filters');
+  filters.classList.remove('img-filters--inactive');
+  var filterPopular = document.querySelector('#filter-popular');
+  var filterNew = document.querySelector('#filter-new');
+  var filterDiscussed = document.querySelector('#filter-discussed');
+
+  filterPopular.addEventListener('click', function () {
+    clean();
+    renderPictures(picturesArr);
+  });
+
+  filterNew.addEventListener('click', function () {
+    clean();
+    picturesCopyArr = getRandomElements(picturesArr, 10);
+    renderPictures(picturesCopyArr);
+  });
+
+  filterDiscussed.addEventListener('click', function () {
+    clean();
+    picturesCopyArr = [];
+    picturesCopyArr = picturesArr.slice();
+    picturesCopyArr.sort(function (first, second) {
+      if (first.comments < second.comments) {
+        return 1;
+      } else if (first.comments > second.comments) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    renderPictures(picturesCopyArr);
+  });
 })();
