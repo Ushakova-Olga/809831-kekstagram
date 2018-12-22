@@ -4,14 +4,20 @@
 (function () {
 
   var closeSuccess = function () {
-    /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента
-    так поняла что должны все обработчики удалиться
-    Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
-    при удалении дочернего окна  кнопками */
+    /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента должны все обработчики удалиться */
     document.removeEventListener('keydown', onSuccessEscPress);
+    document.removeEventListener('click', onSuccessClickAnother);
     document.querySelector('main').removeChild(document.querySelector('main').querySelector('.success'));
   };
   var onSuccessEscPress = window.util.createKeydownHandler(closeSuccess, window.util.ESC_KEYCODE);
+
+  /* Обработчик закрытия по клику на произвольную часть экрана */
+  var onSuccessClickAnother = function (evt) {
+    var successInner = document.querySelector('main').querySelector('.success__inner');
+    if (evt.target !== successInner) {
+      closeSuccess();
+    }
+  };
 
   var templateSuccess = document.querySelector('#success')
       .content
@@ -22,14 +28,19 @@
       .querySelector('.error');
 
   var closeError = function () {
-    /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента
-    так поняла что должны все обработчики удалиться
-    Обработчик для ESC надо удалить, т.к. он вешается на document  и не исчезает
-    при удалении дочернего окна  кнопками */
     document.removeEventListener('keydown', onErrorEscPress);
+    document.removeEventListener('click', onErrorClickAnother);
     document.querySelector('main').removeChild(document.querySelector('main').querySelector('.error'));
   };
   var onErrorEscPress = window.util.createKeydownHandler(closeError, window.util.ESC_KEYCODE);
+
+  /* Обработчик закрытия по клику на произвольную часть экрана */
+  var onErrorClickAnother = function (evt) {
+    var errorInner = document.querySelector('main').querySelector('.error__inner');
+    if (evt.target !== errorInner) {
+      closeError();
+    }
+  };
 
   window.popup = {
     openSuccess: function () {
@@ -42,6 +53,8 @@
       });
 
       document.addEventListener('keydown', onSuccessEscPress);
+      /* Окно закрывается по клику на произвольную область экрана*/
+      document.addEventListener('click', onSuccessClickAnother);
     },
     openError: function () {
       var openedErrorWnd = templateError.cloneNode(true);
@@ -54,6 +67,8 @@
         });
       }
       document.addEventListener('keydown', onErrorEscPress);
+      /* Окно закрывается по клику на произвольную область экрана*/
+      document.addEventListener('click', onErrorClickAnother);
     }
   };
 })();

@@ -8,7 +8,6 @@
 
   var listPictureElements = document.querySelector('.pictures');
   var picturesArr = [];
-  var picturesCopyArr = [];
 
   /* Удаляем картинки из DOM */
   var clean = function () {
@@ -30,7 +29,8 @@
   var successHandler = function (pictures) {
     picturesArr = pictures;
     renderPictures(pictures);
-    picturesCopyArr = picturesArr.slice();
+    /* В случае успешной загрузки надо показать фильтры */
+    window.filters.show();
   };
 
   var errorHandler = function (errorMessage) {
@@ -75,38 +75,20 @@
     return objectElement;
   };
 
+
+  window.pictures = {
+    remove: clean,
+    render: function (pictures) {
+      renderPictures(pictures);
+    },
+    getRandom: function () {
+      return getRandomElements(picturesArr, 10);
+    },
+    getInitialArray: function () {
+      var picArr = [];
+      picArr = picturesArr.slice();
+      return picArr;
+    }
+  };
   window.backend.load(successHandler, errorHandler);
-
-  var filters = document.querySelector('.img-filters');
-  filters.classList.remove('img-filters--inactive');
-  var filterPopular = document.querySelector('#filter-popular');
-  var filterNew = document.querySelector('#filter-new');
-  var filterDiscussed = document.querySelector('#filter-discussed');
-
-  filterPopular.addEventListener('click', function () {
-    clean();
-    renderPictures(picturesArr);
-  });
-
-  filterNew.addEventListener('click', function () {
-    clean();
-    picturesCopyArr = getRandomElements(picturesArr, 10);
-    renderPictures(picturesCopyArr);
-  });
-
-  filterDiscussed.addEventListener('click', function () {
-    clean();
-    picturesCopyArr = [];
-    picturesCopyArr = picturesArr.slice();
-    picturesCopyArr.sort(function (first, second) {
-      if (first.comments < second.comments) {
-        return 1;
-      } else if (first.comments > second.comments) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-    renderPictures(picturesCopyArr);
-  });
 })();

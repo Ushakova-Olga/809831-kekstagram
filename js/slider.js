@@ -14,38 +14,6 @@
   var levelVal = document.querySelector('.effect-level__value');
   var slider = document.querySelector('.img-upload__effect-level.effect-level');
 
-  /* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
-  window.slider = {
-    setSlider: function (xPin) {
-      var checked = effectRadioButtons.querySelector('input:checked');
-      imgUploadPrev.className = 'effects__preview--' + checked.value;
-
-      var depth = Math.round(100 * xPin / window.util.MAX_SLIDER_LENGTH);
-      pin.style.left = xPin + 'px';
-      levelDepth.style.width = depth + '%';
-      levelVal.value = depth;
-
-      if (checked.value === 'none') {
-        slider.classList.add('hidden');
-        imgUploadPrev.style = '';
-      } else {
-        slider.classList.remove('hidden');
-      }
-
-      if (checked.value === 'chrome') {
-        imgUploadPrev.style = 'filter: grayscale(' + depth / 100 + ');';
-      } else if (checked.value === 'sepia') {
-        imgUploadPrev.style = 'filter: sepia(' + depth / 100 + ');';
-      } else if (checked.value === 'marvin') {
-        imgUploadPrev.style = 'filter: invert(' + depth + '%);';
-      } else if (checked.value === 'phobos') {
-        imgUploadPrev.style = 'filter: blur(' + (3 * depth / 100) + 'px);';
-      } else if (checked.value === 'heat') {
-        imgUploadPrev.style = 'filter: brightness(' + (1 + 2 * depth / 100) + ');';
-      }
-    },
-  };
-
   var onPinMoved = function (evt) {
     evt.preventDefault();
     /* Запомнить точки, с которых начали перетаскивать */
@@ -85,6 +53,38 @@
     /* Обработчики перемещения мыши и отпускания мыши */
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+  };
+
+  /* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
+  window.slider = {
+    setSlider: function (xPin) {
+      var checked = effectRadioButtons.querySelector('input:checked');
+      imgUploadPrev.className = 'effects__preview--' + checked.value;
+
+      var depth = Math.round(100 * xPin / window.util.MAX_SLIDER_LENGTH);
+      pin.style.left = xPin + 'px';
+      levelDepth.style.width = depth + '%';
+      levelVal.value = depth;
+
+      if (checked.value === 'none') {
+        slider.classList.add('hidden');
+        imgUploadPrev.style.filter = '';
+      } else {
+        slider.classList.remove('hidden');
+      }
+
+      if (checked.value === 'chrome') {
+        imgUploadPrev.style.filter = 'grayscale(' + depth / 100 + ')';
+      } else if (checked.value === 'sepia') {
+        imgUploadPrev.style.filter = 'sepia(' + depth / 100 + ')';
+      } else if (checked.value === 'marvin') {
+        imgUploadPrev.style.filter = 'invert(' + depth + '%)';
+      } else if (checked.value === 'phobos') {
+        imgUploadPrev.style.filter = 'blur(' + (3 * depth / 100) + 'px)';
+      } else if (checked.value === 'heat') {
+        imgUploadPrev.style.filter = 'brightness(' + (1 + 2 * depth / 100) + ')';
+      }
+    },
   };
 
   /* Перемещение слайдера */

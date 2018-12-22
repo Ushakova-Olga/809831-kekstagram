@@ -2,6 +2,7 @@
 
 /* Модуль для работы с формой загрузки и редактирования картинки */
 (function () {
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   // диалоговое окно .img-upload__overlay
   var upload = document.querySelector('.img-upload__overlay');
   // Поле ввода имени файла
@@ -10,20 +11,38 @@
   // филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
   var effectRadioButtons = upload.querySelector('.img-upload__effects');
   var inputHash = document.querySelector('.text__hashtags');
+  var inputDescription = document.querySelector('.text__description');
+  var imgPreview = document.querySelector('.img-upload__preview img');
 
   /* Обработчик события изменение в поле - имя файла */
   uploadFileInput.addEventListener('change', function () {
     openPopup();
+    /* Предзагрузка изображения */
+    var file = uploadFileInput.files[0];
+    var fileName = file.name.toLowerCase();
+    var preview = document.querySelector('.img-upload__preview img');
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+    if (matches) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        preview.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+    }
   });
 
   /* Функция закрытия окна */
   var closePopup = function () {
     /* если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к
     закрытию формы редактирования изображения.*/
-    if (inputHash !== document.activeElement) {
+    if ((inputHash !== document.activeElement) && (inputDescription !== document.activeElement)) {
       upload.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
       uploadFileInput.value = '';
+      imgPreview.style.transform = 'scale(1)';
       /* На всякий случай сброс на значение по умолчанию для слайдера
       и эффектов 100%, эффект берется из формы последний выбранный пользователем */
       window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
@@ -100,9 +119,15 @@
     }
 
     target.setCustomValidity(errorMessage);
+    if (errorMessage) {
+      /* Если есть ошибка надо показать красную рамку*/
+      target.classList.add('border-red');
+    } else {
+      target.classList.remove('border-red');
+    }
   });
 
-  /* Задание 6 - Закрыть форму после загрузки и задать поля по умолчанию */
+  /* Закрыть форму после загрузки и задать поля по умолчанию */
   var form = document.querySelector('.img-upload__form');
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
