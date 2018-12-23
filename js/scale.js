@@ -14,34 +14,34 @@
 задаёт масштаб. Например, если в поле стоит значение 75%, то в стиле изображения должно быть
 написано transform: scale(0.75).*/
 
-  var scaleSmallButton = document.querySelector('.scale__control--smaller');
-  var scaleBigButton = document.querySelector('.scale__control--bigger');
-  var scaleControl = document.querySelector('.scale__control--value');
-  var imgPreview = document.querySelector('.img-upload__preview img');
+  var scaleSmallButtonElement = document.querySelector('.scale__control--smaller');
+  var scaleBigButtonElement = document.querySelector('.scale__control--bigger');
+  var scaleControlInputElement = document.querySelector('.scale__control--value');
+  var previewImgElement = document.querySelector('.img-upload__preview img');
 
-  scaleSmallButton.addEventListener('click', function () {
-    var valStr = scaleControl.value;
-    var valNumber = valStr.slice(0, scaleControl.value.length - 1);
+  scaleSmallButtonElement.addEventListener('click', function () {
+    var valStr = scaleControlInputElement.value;
+    var valNumber = valStr.slice(0, scaleControlInputElement.value.length - 1);
 
     valNumber -= 25;
     if (valNumber < 25) {
       valNumber = 25;
     }
     valStr = valNumber + '%';
-    scaleControl.value = valStr;
-    imgPreview.style.transform = 'scale(' + valNumber / 100 + ' )';
+    scaleControlInputElement.value = valStr;
+    previewImgElement.style.transform = 'scale(' + valNumber / 100 + ' )';
   });
 
-  scaleBigButton.addEventListener('click', function () {
-    var valStr = scaleControl.value;
-    var valNumber = valStr.slice(0, scaleControl.value.length - 1);
+  scaleBigButtonElement.addEventListener('click', function () {
+    var valStr = scaleControlInputElement.value;
+    var valNumber = valStr.slice(0, scaleControlInputElement.value.length - 1);
 
     valNumber = +valNumber + 25;
     if (valNumber > 100) {
       valNumber = 100;
     }
     valStr = valNumber + '%';
-    scaleControl.value = valStr;
-    imgPreview.style.transform = 'scale(' + valNumber / 100 + ' )';
+    scaleControlInputElement.value = valStr;
+    previewImgElement.style.transform = 'scale(' + valNumber / 100 + ' )';
   });
 })();

@@ -4,21 +4,21 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   // диалоговое окно .img-upload__overlay
-  var upload = document.querySelector('.img-upload__overlay');
+  var uploadDivElement = document.querySelector('.img-upload__overlay');
   // Поле ввода имени файла
-  var uploadFileInput = document.querySelector('#upload-file');
-  var uploadClose = upload.querySelector('.img-upload__cancel');
+  var uploadFileInputElement = document.querySelector('#upload-file');
+  var closeUploadButtonElement = uploadDivElement.querySelector('.img-upload__cancel');
   // филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
-  var effectRadioButtons = upload.querySelector('.img-upload__effects');
-  var inputHash = document.querySelector('.text__hashtags');
-  var inputDescription = document.querySelector('.text__description');
-  var imgPreview = document.querySelector('.img-upload__preview img');
+  var effectsFieldsetElement = uploadDivElement.querySelector('.img-upload__effects');
+  var hashInputElement = document.querySelector('.text__hashtags');
+  var descriptionTextareaElement = document.querySelector('.text__description');
+  var previewImgElement = document.querySelector('.img-upload__preview img');
 
   /* Обработчик события изменение в поле - имя файла */
-  uploadFileInput.addEventListener('change', function () {
+  uploadFileInputElement.addEventListener('change', function () {
     openPopup();
     /* Предзагрузка изображения */
-    var file = uploadFileInput.files[0];
+    var file = uploadFileInputElement.files[0];
     var fileName = file.name.toLowerCase();
     var preview = document.querySelector('.img-upload__preview img');
 
@@ -36,14 +36,14 @@
 
   /* Функция закрытия окна */
   var closePopup = function () {
-    /* если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к
+    /* если фокус находится в поле ввода хэш-тега или поле описания, нажатие на Esc не должно приводить к
     закрытию формы редактирования изображения.*/
-    if ((inputHash !== document.activeElement) && (inputDescription !== document.activeElement)) {
-      upload.classList.add('hidden');
+    if ((hashInputElement !== document.activeElement) && (descriptionTextareaElement !== document.activeElement)) {
+      uploadDivElement.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
-      uploadFileInput.value = '';
-      imgPreview.style.transform = 'scale(1)';
-      /* На всякий случай сброс на значение по умолчанию для слайдера
+      uploadFileInputElement.value = '';
+      previewImgElement.style.transform = 'scale(1)';
+      /* Сброс на значение по умолчанию для слайдера
       и эффектов 100%, эффект берется из формы последний выбранный пользователем */
       window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
     }
@@ -54,26 +54,26 @@
 
   /* Функция открытия окна */
   var openPopup = function () {
-    upload.classList.remove('hidden');
+    uploadDivElement.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
   /* Обработчик события - клик на крестике */
-  uploadClose.addEventListener('click', function () {
+  closeUploadButtonElement.addEventListener('click', function () {
     closePopup();
   });
 
   /* Обработчик события - нажатие Enter на крестике */
-  uploadClose.addEventListener('keydown', window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE));
+  closeUploadButtonElement.addEventListener('keydown', window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE));
 
   /* Установка эффектов и слайдера в первоначальное состояние 100% */
   window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
 
-  effectRadioButtons.addEventListener('change', function () {
+  effectsFieldsetElement.addEventListener('change', function () {
     window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
   });
 
-  inputHash.addEventListener('input', function (evt) {
+  hashInputElement.addEventListener('input', function (evt) {
     var target = evt.target;
     /* Удалить повторяющиеся пробелы в строке, первый и последний пробел при наличии
     чтобы избежать создания пустых элементов в массиве */

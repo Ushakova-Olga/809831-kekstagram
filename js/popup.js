@@ -2,7 +2,6 @@
 
 /* Модуль для работы с окнами успеха и ошибки при загрузке изображения */
 (function () {
-
   var closeSuccess = function () {
     /* Удалять обработчики для кнопок не стала, т.к. с удалением DOM- элемента должны все обработчики удалиться */
     document.removeEventListener('keydown', onSuccessEscPress);
@@ -61,11 +60,16 @@
       document.querySelector('main').appendChild(openedErrorWnd);
       var openedBtn = openedErrorWnd.querySelectorAll('.error__button');
 
-      for (var i = 0; i < openedBtn.length; i++) {
+      openedBtn.forEach(function (item) {
+        item.addEventListener('click', function () {
+          closeError();
+        });
+      });
+      /*  for (var i = 0; i < openedBtn.length; i++) {
         openedBtn[i].addEventListener('click', function () {
           closeError();
         });
-      }
+      }*/
       document.addEventListener('keydown', onErrorEscPress);
       /* Окно закрывается по клику на произвольную область экрана*/
       document.addEventListener('click', onErrorClickAnother);

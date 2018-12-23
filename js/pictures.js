@@ -6,28 +6,29 @@
       .content
       .querySelector('.picture');
 
-  var listPictureElements = document.querySelector('.pictures');
-  var picturesArr = [];
+  var picturesSectionElement = document.querySelector('.pictures');
+  var picturesOrigin = [];
 
   /* Удаляем картинки из DOM */
-  var clean = function () {
-    var delPic = listPictureElements.querySelectorAll('.picture');
-    for (var i = 0; i < delPic.length; i++) {
-      listPictureElements.removeChild(delPic[i]);
+  var cleanPictures = function () {
+    var deletingPictures = picturesSectionElement.querySelectorAll('.picture');
+    for (var i = 0; i < deletingPictures.length; i++) {
+      picturesSectionElement.removeChild(deletingPictures[i]);
     }
   };
 
   var renderPictures = function (pictures) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pictures.length; i++) {
-      fragment.appendChild(createElementPicture(pictures[i], pictureTemplate));
-    }
-    listPictureElements.appendChild(fragment);
+    pictures.forEach(function (item) {
+      fragment.appendChild(createElementPicture(item, pictureTemplate));
+    });
+
+    picturesSectionElement.appendChild(fragment);
   };
 
   /* В случае если данные успешно получены */
   var successHandler = function (pictures) {
-    picturesArr = pictures;
+    picturesOrigin = pictures;
     renderPictures(pictures);
     /* В случае успешной загрузки надо показать фильтры */
     window.filters.show();
@@ -77,17 +78,17 @@
 
 
   window.pictures = {
-    remove: clean,
+    remove: cleanPictures,
     render: function (pictures) {
       renderPictures(pictures);
     },
     getRandom: function () {
-      return getRandomElements(picturesArr, 10);
+      return getRandomElements(picturesOrigin, 10);
     },
     getInitialArray: function () {
-      var picArr = [];
-      picArr = picturesArr.slice();
-      return picArr;
+      var pictures = [];
+      pictures = picturesOrigin.slice();
+      return pictures;
     }
   };
   window.backend.load(successHandler, errorHandler);
