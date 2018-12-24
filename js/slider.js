@@ -3,48 +3,16 @@
 /* Модуль для работы со слайдером */
 (function () {
   // диалоговое окно .img-upload__overlay
-  var upload = document.querySelector('.img-upload__overlay');
+  var uploadDivElement = document.querySelector('.img-upload__overlay');
   // картинка с предпросмотром эффектов
-  var imgUploadPrev = document.querySelector('.img-upload__preview img');
+  var previewImgElement = document.querySelector('.img-upload__preview img');
   // филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
-  var effectRadioButtons = upload.querySelector('.img-upload__effects');
+  var effectsFieldsetElement = uploadDivElement.querySelector('.img-upload__effects');
 
-  var pin = document.querySelector('.effect-level__pin');
-  var levelDepth = document.querySelector('.effect-level__depth');
-  var levelVal = document.querySelector('.effect-level__value');
-  var slider = document.querySelector('.img-upload__effect-level.effect-level');
-
-  /* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
-  window.slider = {
-    setSlider: function (xPin) {
-      var checked = effectRadioButtons.querySelector('input:checked');
-      imgUploadPrev.className = 'effects__preview--' + checked.value;
-
-      var depth = Math.round(100 * xPin / window.util.MAX_SLIDER_LENGTH);
-      pin.style.left = xPin + 'px';
-      levelDepth.style.width = depth + '%';
-      levelVal.value = depth;
-
-      if (checked.value === 'none') {
-        slider.classList.add('hidden');
-        imgUploadPrev.style = '';
-      } else {
-        slider.classList.remove('hidden');
-      }
-
-      if (checked.value === 'chrome') {
-        imgUploadPrev.style = 'filter: grayscale(' + depth / 100 + ');';
-      } else if (checked.value === 'sepia') {
-        imgUploadPrev.style = 'filter: sepia(' + depth / 100 + ');';
-      } else if (checked.value === 'marvin') {
-        imgUploadPrev.style = 'filter: invert(' + depth + '%);';
-      } else if (checked.value === 'phobos') {
-        imgUploadPrev.style = 'filter: blur(' + (3 * depth / 100) + 'px);';
-      } else if (checked.value === 'heat') {
-        imgUploadPrev.style = 'filter: brightness(' + (1 + 2 * depth / 100) + ');';
-      }
-    },
-  };
+  var pinDivElement = document.querySelector('.effect-level__pin');
+  var levelDepthDivElement = document.querySelector('.effect-level__depth');
+  var levelValueInputElement = document.querySelector('.effect-level__value');
+  var sliderFieldsetElement = document.querySelector('.img-upload__effect-level.effect-level');
 
   var onPinMoved = function (evt) {
     evt.preventDefault();
@@ -68,7 +36,7 @@
         y: moveEvt.clientY
       };
 
-      var pinX = pin.offsetLeft - shift.x;
+      var pinX = pinDivElement.offsetLeft - shift.x;
       if ((pinX < window.util.MAX_SLIDER_LENGTH) && (pinX > 0)) {
         window.slider.setSlider(pinX);
       }
@@ -87,6 +55,38 @@
     document.addEventListener('mouseup', onMouseUp);
   };
 
+  /* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
+  window.slider = {
+    setSlider: function (xPin) {
+      var checked = effectsFieldsetElement.querySelector('input:checked');
+      previewImgElement.className = 'effects__preview--' + checked.value;
+
+      var depth = Math.round(100 * xPin / window.util.MAX_SLIDER_LENGTH);
+      pinDivElement.style.left = xPin + 'px';
+      levelDepthDivElement.style.width = depth + '%';
+      levelValueInputElement.value = depth;
+
+      if (checked.value === 'none') {
+        sliderFieldsetElement.classList.add('hidden');
+        previewImgElement.style.filter = '';
+      } else {
+        sliderFieldsetElement.classList.remove('hidden');
+      }
+
+      if (checked.value === 'chrome') {
+        previewImgElement.style.filter = 'grayscale(' + depth / 100 + ')';
+      } else if (checked.value === 'sepia') {
+        previewImgElement.style.filter = 'sepia(' + depth / 100 + ')';
+      } else if (checked.value === 'marvin') {
+        previewImgElement.style.filter = 'invert(' + depth + '%)';
+      } else if (checked.value === 'phobos') {
+        previewImgElement.style.filter = 'blur(' + (3 * depth / 100) + 'px)';
+      } else if (checked.value === 'heat') {
+        previewImgElement.style.filter = 'brightness(' + (1 + 2 * depth / 100) + ')';
+      }
+    },
+  };
+
   /* Перемещение слайдера */
-  pin.addEventListener('mousedown', onPinMoved);
+  pinDivElement.addEventListener('mousedown', onPinMoved);
 })();

@@ -6,31 +6,32 @@
       .content
       .querySelector('.picture');
 
-  var listPictureElements = document.querySelector('.pictures');
-  var picturesArr = [];
-  var picturesCopyArr = [];
+  var picturesSectionElement = document.querySelector('.pictures');
+  var picturesOrigin = [];
 
   /* Удаляем картинки из DOM */
-  var clean = function () {
-    var delPic = listPictureElements.querySelectorAll('.picture');
-    for (var i = 0; i < delPic.length; i++) {
-      listPictureElements.removeChild(delPic[i]);
+  var cleanPictures = function () {
+    var deletingPictures = picturesSectionElement.querySelectorAll('.picture');
+    for (var i = 0; i < deletingPictures.length; i++) {
+      picturesSectionElement.removeChild(deletingPictures[i]);
     }
   };
 
   var renderPictures = function (pictures) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pictures.length; i++) {
-      fragment.appendChild(createElementPicture(pictures[i], pictureTemplate));
-    }
-    listPictureElements.appendChild(fragment);
+    pictures.forEach(function (item) {
+      fragment.appendChild(createElementPicture(item, pictureTemplate));
+    });
+
+    picturesSectionElement.appendChild(fragment);
   };
 
   /* В случае если данные успешно получены */
   var successHandler = function (pictures) {
-    picturesArr = pictures;
+    picturesOrigin = pictures;
     renderPictures(pictures);
-    picturesCopyArr = picturesArr.slice();
+    /* В случае успешной загрузки надо показать фильтры */
+    window.filters.show();
   };
 
   var errorHandler = function (errorMessage) {
@@ -75,38 +76,20 @@
     return objectElement;
   };
 
+
+  window.pictures = {
+    remove: cleanPictures,
+    render: function (pictures) {
+      renderPictures(pictures);
+    },
+    getRandom: function () {
+      return getRandomElements(picturesOrigin, 10);
+    },
+    getInitialArray: function () {
+      var pictures = [];
+      pictures = picturesOrigin.slice();
+      return pictures;
+    }
+  };
   window.backend.load(successHandler, errorHandler);
-
-  var filters = document.querySelector('.img-filters');
-  filters.classList.remove('img-filters--inactive');
-  var filterPopular = document.querySelector('#filter-popular');
-  var filterNew = document.querySelector('#filter-new');
-  var filterDiscussed = document.querySelector('#filter-discussed');
-
-  filterPopular.addEventListener('click', function () {
-    clean();
-    renderPictures(picturesArr);
-  });
-
-  filterNew.addEventListener('click', function () {
-    clean();
-    picturesCopyArr = getRandomElements(picturesArr, 10);
-    renderPictures(picturesCopyArr);
-  });
-
-  filterDiscussed.addEventListener('click', function () {
-    clean();
-    picturesCopyArr = [];
-    picturesCopyArr = picturesArr.slice();
-    picturesCopyArr.sort(function (first, second) {
-      if (first.comments < second.comments) {
-        return 1;
-      } else if (first.comments > second.comments) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-    renderPictures(picturesCopyArr);
-  });
 })();
