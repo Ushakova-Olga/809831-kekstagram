@@ -16,7 +16,7 @@
 
   /* Обработчик события изменение в поле - имя файла */
   uploadFileInputElement.addEventListener('change', function () {
-    openPopup();
+
     /* Предзагрузка изображения */
     var file = uploadFileInputElement.files[0];
     var fileName = file.name.toLowerCase();
@@ -26,11 +26,15 @@
       return fileName.endsWith(it);
     });
     if (matches) {
+      openPopup();
       var reader = new FileReader();
       reader.addEventListener('load', function () {
         preview.src = reader.result;
       });
       reader.readAsDataURL(file);
+    } else {
+      window.popup.openError('Ошибка! Выбранный файл не является поддерживаемым изображением');
+      uploadFileInputElement.value = '';
     }
   });
 

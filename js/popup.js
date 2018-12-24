@@ -55,21 +55,21 @@
       /* Окно закрывается по клику на произвольную область экрана*/
       document.addEventListener('click', onSuccessClickAnother);
     },
-    openError: function () {
+    openError: function (title) {
       var openedErrorWnd = templateError.cloneNode(true);
       document.querySelector('main').appendChild(openedErrorWnd);
       var openedBtn = openedErrorWnd.querySelectorAll('.error__button');
+      if (title) {
+        openedErrorWnd.querySelector('.error__title').innerHTML = title;
+        openedErrorWnd.querySelector('.error__title').style = 'font-size: 20px';
+      }
 
       openedBtn.forEach(function (item) {
         item.addEventListener('click', function () {
           closeError();
         });
       });
-      /*  for (var i = 0; i < openedBtn.length; i++) {
-        openedBtn[i].addEventListener('click', function () {
-          closeError();
-        });
-      }*/
+
       document.addEventListener('keydown', onErrorEscPress);
       /* Окно закрывается по клику на произвольную область экрана*/
       document.addEventListener('click', onErrorClickAnother);
