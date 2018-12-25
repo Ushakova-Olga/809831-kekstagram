@@ -40,7 +40,7 @@
 
   /* Функция закрытия окна */
   var closePopup = function () {
-    /* если фокус находится в поле ввода хэш-тега или поле описания, нажатие на Esc не должно приводить к
+    /* если фокус находится в поле ввода хэш-тега или поле комментария, нажатие на Esc не должно приводить к
     закрытию формы редактирования изображения.*/
     if ((hashInputElement !== document.activeElement) && (descriptionTextareaElement !== document.activeElement)) {
       uploadDivElement.classList.add('hidden');
@@ -82,17 +82,17 @@
     /* Удалить повторяющиеся пробелы в строке, первый и последний пробел при наличии
     чтобы избежать создания пустых элементов в массиве */
     var value = target.value.replace(/\s+/g, ' ').trim().toLowerCase();
-    var hashArr = value.split(' ');
-    var hashArr2 = value.split('#').slice(1);
+    var hashTags = value.split(' ');
+    var hashSpacedSharpTags = value.split('#').slice(1);
     var errorMessage = '';
 
-    if (hashArr.length > window.util.MAX_HASHTAGS) {
+    if (hashTags.length > window.util.MAX_HASHTAGS) {
       /* нельзя указать больше пяти хэш-тегов; */
       errorMessage = 'Хеш-тегов может быть не более 5-ти';
     } else {
-      for (var i = 0; i < hashArr.length; i++) {
-        var hashtag = hashArr[i];
-        var hashtagsBefore = hashArr.slice(0, Math.max(0, i));
+      for (var i = 0; i < hashTags.length; i++) {
+        var hashtag = hashTags[i];
+        var hashtagsBefore = hashTags.slice(0, Math.max(0, i));
         /* один и тот же хэш-тег не может быть использован дважды; */
         if (hashtagsBefore.indexOf(hashtag) > -1) {
           errorMessage = 'Не может быть двух одинаковых тегов';
@@ -113,7 +113,7 @@
         }
       }
 
-      if ((hashArr.length !== hashArr2.length) && (hashArr[0] !== '') && (errorMessage === '')) {
+      if ((hashTags.length !== hashSpacedSharpTags.length) && (hashTags[0] !== '') && (errorMessage === '')) {
         /* второе условие добавлено на тот случай когда пользователь
         сначала начал вводить теги, а потом удалил, в этом случае событие вызывается и массивы оказываются разной
         длины, в первом оказывается пустой элемент */

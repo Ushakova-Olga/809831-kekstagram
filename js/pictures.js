@@ -7,7 +7,7 @@
       .querySelector('.picture');
 
   var picturesSectionElement = document.querySelector('.pictures');
-  var picturesOrigin = [];
+  var originPictures = [];
 
   /* Удаляем картинки из DOM */
   var cleanPictures = function () {
@@ -27,14 +27,14 @@
   };
 
   /* В случае если данные успешно получены */
-  var successHandler = function (pictures) {
-    picturesOrigin = pictures;
+  var onSuccessLoad = function (pictures) {
+    originPictures = pictures;
     renderPictures(pictures);
     /* В случае успешной загрузки надо показать фильтры */
     window.filters.show();
   };
 
-  var errorHandler = function (errorMessage) {
+  var onErrorLoad = function (errorMessage) {
     /* Создаем DOM - элемент с сообщением об ошибке */
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
@@ -49,18 +49,18 @@
 
   var getRandomElements = function (pictures, n) {
     var result;
-    var picturesResult = [];
-    picturesResult[0] = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
+    var resultPictures = [];
+    resultPictures[0] = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
     if (n >= 2) {
       for (var i = 1; i < n; i++) {
         result = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
-        while (picturesResult.indexOf(result) !== -1) {
+        while (resultPictures.indexOf(result) !== -1) {
           result = pictures[window.util.getRandomNumber(0, pictures.length - 1)];
         }
-        picturesResult[i] = result;
+        resultPictures[i] = result;
       }
     }
-    return picturesResult;
+    return resultPictures;
   };
 
   var createElementPicture = function (object, template) {
@@ -83,13 +83,13 @@
       renderPictures(pictures);
     },
     getRandom: function () {
-      return getRandomElements(picturesOrigin, 10);
+      return getRandomElements(originPictures, 10);
     },
     getInitialArray: function () {
       var pictures = [];
-      pictures = picturesOrigin.slice();
+      pictures = originPictures.slice();
       return pictures;
     }
   };
-  window.backend.load(successHandler, errorHandler);
+  window.backend.load(onSuccessLoad, onErrorLoad);
 })();
