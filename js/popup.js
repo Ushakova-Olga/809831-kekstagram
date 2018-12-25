@@ -46,6 +46,7 @@
       var openedSuccessWnd = templateSuccess.cloneNode(true);
       document.querySelector('main').appendChild(openedSuccessWnd);
       var openedBtn = openedSuccessWnd.querySelector('.success__button');
+      openedBtn.focus();
 
       openedBtn.addEventListener('click', function () {
         closeSuccess();
@@ -59,6 +60,7 @@
       var openedErrorWnd = templateError.cloneNode(true);
       document.querySelector('main').appendChild(openedErrorWnd);
       var openedBtn = openedErrorWnd.querySelectorAll('.error__button');
+      openedBtn[0].focus();
       if (title) {
         openedErrorWnd.querySelector('.error__title').innerHTML = title;
         openedErrorWnd.querySelector('.error__title').style = 'font-size: 20px';
