@@ -14,6 +14,8 @@
     filterDiscussedButtonElement.classList.remove('img-filters__button--active');
   };
 
+  /* Эти обработчики навешиваются 1 раз на кнопки фильтров и живут до конца,
+  пока пользователь не закрыл окно, поэтому их не удаляю. */
   filterPopularButtonElement.addEventListener('click', function () {
     unactivateButtons();
     filterPopularButtonElement.classList.add('img-filters__button--active');

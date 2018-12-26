@@ -31,6 +31,7 @@
 
     showNextComments();
     document.addEventListener('keydown', onDocumentEscPress);
+    bigPictureCancelElement.focus();
   };
 
 
@@ -80,8 +81,11 @@
     }
   };
 
+  /* Эти обработчики навешиваются только 1 раз и связаны только с единственным элементом - bigPicture
+  Поэтому их не удаляю. Они будут жить с открытием сайта в единственном экземпляре и до его закрытия */
   commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
   bigPictureCancelElement.addEventListener('click', closeBigPicture);
+
 
   window.bigPicture = {
     open: show
