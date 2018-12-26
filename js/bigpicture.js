@@ -3,15 +3,16 @@
 /* Модуль для работы с большой картинкой */
 (function () {
   var LIMIT_COMMENTS = 5;
-  var bigpictureElement = document.querySelector('.big-picture');
+  var bigPictureSectionElement = document.querySelector('.big-picture');
   var bigPictureCancelElement = document.querySelector('.big-picture__cancel');
-  var commentsLoaderElement = bigpictureElement.querySelector('.social__comments-loader');
+  var commentsLoaderElement = bigPictureSectionElement.querySelector('.social__comments-loader');
   var commentListElement = document.querySelector('.social__comments');
   var commentTemplate = document.querySelector('#comment')
       .content
       .querySelector('.social__comment');
   var startIndexComment = 0;
   var picture = {};
+  var bodyElement = document.querySelector('body');
 
   /*  Функция, которая осуществляет показ большой картинки */
   var show = function (pictureObject) {
@@ -25,9 +26,10 @@
       commentsLoaderElement.classList.remove('visually-hidden');
     }
 
-    bigpictureElement.classList.remove('hidden');
-    bigpictureElement.querySelector('.big-picture__img img').src = pictureObject.url;
-    bigpictureElement.querySelector('.likes-count').textContent = pictureObject.likes;
+    bodyElement.classList.add('modal-open');
+    bigPictureSectionElement.classList.remove('hidden');
+    bigPictureSectionElement.querySelector('.big-picture__img img').src = pictureObject.url;
+    bigPictureSectionElement.querySelector('.likes-count').textContent = pictureObject.likes;
 
     showNextComments();
     document.addEventListener('keydown', onDocumentEscPress);
@@ -63,11 +65,12 @@
 
     var allComments = picture.comments.length;
     var showedComments = commentListElement.childNodes.length;
-    bigpictureElement.querySelector('.social__comment-count').innerHTML = showedComments + ' из <span class="comments-count">' + allComments + '</span> комментариев</div>';
+    bigPictureSectionElement.querySelector('.social__comment-count').innerHTML = showedComments + ' из <span class="comments-count">' + allComments + '</span> комментариев</div>';
   };
 
   var closeBigPicture = function () {
-    bigpictureElement.classList.add('hidden');
+    bigPictureSectionElement.classList.add('hidden');
+    bodyElement.classList.remove('modal-open');
     document.removeEventListener('keydown', onDocumentEscPress);
   };
 
