@@ -12,9 +12,9 @@
   /* Удаляем картинки из DOM */
   var cleanPictures = function () {
     var deletingPictures = picturesSectionElement.querySelectorAll('.picture');
-    for (var i = 0; i < deletingPictures.length; i++) {
-      picturesSectionElement.removeChild(deletingPictures[i]);
-    }
+    deletingPictures.forEach(function (item) {
+      picturesSectionElement.removeChild(item);
+    });
   };
 
   var renderPictures = function (pictures) {
