@@ -2,6 +2,10 @@
 
 /* Модуль для работы со слайдером */
 (function () {
+  var BLUR_COEFFICIENT = 3;
+  var HEAT_COEFFICIENT = 2;
+  var MIN_VALUE_HEAT = 1;
+
   // диалоговое окно .img-upload__overlay
   var uploadDivElement = document.querySelector('.img-upload__overlay');
   // картинка с предпросмотром эффектов
@@ -38,7 +42,7 @@
 
       var pinX = pinDivElement.offsetLeft - shift.x;
       if ((pinX < window.util.MAX_SLIDER_LENGTH) && (pinX > 0)) {
-        window.slider.setSlider(pinX);
+        window.slider.set(pinX);
       }
     };
 
@@ -57,7 +61,7 @@
 
   /* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
   window.slider = {
-    setSlider: function (xPin) {
+    set: function (xPin) {
       var checked = effectsFieldsetElement.querySelector('input:checked');
       previewImgElement.className = 'effects__preview--' + checked.value;
 
@@ -80,13 +84,16 @@
       } else if (checked.value === 'marvin') {
         previewImgElement.style.filter = 'invert(' + depth + '%)';
       } else if (checked.value === 'phobos') {
-        previewImgElement.style.filter = 'blur(' + (3 * depth / 100) + 'px)';
+        previewImgElement.style.filter = 'blur(' + (BLUR_COEFFICIENT * depth / 100) + 'px)';
       } else if (checked.value === 'heat') {
-        previewImgElement.style.filter = 'brightness(' + (1 + 2 * depth / 100) + ')';
+        previewImgElement.style.filter = 'brightness(' + (MIN_VALUE_HEAT + HEAT_COEFFICIENT * depth / 100) + ')';
       }
     },
+    activatePin: function () {
+      pinDivElement.addEventListener('mousedown', onPinMoved);
+    },
+    deactivatePin: function () {
+      pinDivElement.removeEventListener('mousedown', onPinMoved);
+    }
   };
-
-  /* Перемещение слайдера */
-  pinDivElement.addEventListener('mousedown', onPinMoved);
 })();

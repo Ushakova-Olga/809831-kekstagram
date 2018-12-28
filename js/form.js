@@ -7,7 +7,7 @@
   var uploadDivElement = document.querySelector('.img-upload__overlay');
   // Поле ввода имени файла
   var uploadFileInputElement = document.querySelector('#upload-file');
-  var closeUploadButtonElement = uploadDivElement.querySelector('.img-upload__cancel');
+  var closeUploadButtonElement = uploadDivElement.querySelector('#upload-cancel');
   // филдсет со скрытыми радиобаттонами, которыми выбирается тот или другой эффект
   var effectsFieldsetElement = uploadDivElement.querySelector('.img-upload__effects');
   var hashInputElement = document.querySelector('.text__hashtags');
@@ -46,10 +46,13 @@
       uploadDivElement.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
       uploadFileInputElement.value = '';
-      previewImgElement.style.transform = 'scale(1)';
-      /* Сброс на значение по умолчанию для слайдера
-      и эффектов 100%, эффект берется из формы последний выбранный пользователем */
-      window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
+      /* Сброс данных формы. Эффект сбрасывается на исходное состояние (heat)*/
+      form.reset();
+
+      /* Сброс для слайдера и эффектов 100% */
+      window.slider.set(window.util.MAX_SLIDER_LENGTH);
+      window.slider.deactivatePin();
+      previewImgElement.style = '';
     }
   };
 
@@ -60,6 +63,7 @@
   var openPopup = function () {
     uploadDivElement.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
+    window.slider.activatePin();
   };
 
   /* Обработчик события - клик на крестике */
@@ -71,10 +75,10 @@
   closeUploadButtonElement.addEventListener('keydown', window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE));
 
   /* Установка эффектов и слайдера в первоначальное состояние 100% */
-  window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
+  window.slider.set(window.util.MAX_SLIDER_LENGTH);
 
   effectsFieldsetElement.addEventListener('change', function () {
-    window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
+    window.slider.set(window.util.MAX_SLIDER_LENGTH);
   });
 
   hashInputElement.addEventListener('input', function (evt) {
