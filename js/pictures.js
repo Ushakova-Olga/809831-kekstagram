@@ -8,7 +8,6 @@
 
   var picturesSectionElement = document.querySelector('.pictures');
   var originPictures = [];
-  var picturesSorting = [];
 
   /* Удаляем картинки из DOM */
   var cleanPictures = function () {
@@ -77,30 +76,19 @@
     return objectElement;
   };
 
-  window.pictures = {
-    showOriginal: function () {
-      cleanPictures();
-      renderPictures(originPictures);
-    },
-    showRandom: function () {
-      picturesSorting = getRandomElements(originPictures, 10);
-      cleanPictures();
-      renderPictures(picturesSorting);
-    },
-    showMostDiscussed: function () {
-      picturesSorting = [];
-      picturesSorting = originPictures.slice();
-      picturesSorting.sort(function (first, second) {
-        if (first.comments < second.comments) {
-          return 1;
-        } else if (first.comments > second.comments) {
-          return -1;
-        }
-        return 0;
-      });
 
-      cleanPictures();
-      renderPictures(picturesSorting);
+  window.pictures = {
+    remove: cleanPictures,
+    render: function (pictures) {
+      renderPictures(pictures);
+    },
+    getRandom: function () {
+      return getRandomElements(originPictures, 10);
+    },
+    getInitialArray: function () {
+      var pictures = [];
+      pictures = originPictures.slice();
+      return pictures;
     }
   };
   window.backend.load(onSuccessLoad, onErrorLoad);

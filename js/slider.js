@@ -5,7 +5,6 @@
   var BLUR_COEFFICIENT = 3;
   var HEAT_COEFFICIENT = 2;
   var MIN_VALUE_HEAT = 1;
-
   // диалоговое окно .img-upload__overlay
   var uploadDivElement = document.querySelector('.img-upload__overlay');
   // картинка с предпросмотром эффектов

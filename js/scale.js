@@ -27,7 +27,6 @@
 
   scaleSmallButtonElement.addEventListener('click', function () {
     initValues();
-
     valueNumber -= SCALE_STEP;
     if (valueNumber < MIN_SCALE_VALUE) {
       valueNumber = MIN_SCALE_VALUE;
@@ -37,7 +36,6 @@
 
   scaleBigButtonElement.addEventListener('click', function () {
     initValues();
-
     valueNumber = +valueNumber + SCALE_STEP;
     if (valueNumber > MAX_SCALE_VALUE) {
       valueNumber = MAX_SCALE_VALUE;

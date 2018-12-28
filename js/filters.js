@@ -6,50 +6,49 @@
   var filterPopularButtonElement = document.querySelector('#filter-popular');
   var filterNewButtonElement = document.querySelector('#filter-new');
   var filterDiscussedButtonElement = document.querySelector('#filter-discussed');
+  var picturesSorting = [];
 
-  var unactivateButtons = function () {
-    filterPopularButtonElement.classList.remove('img-filters__button--active');
-    filterNewButtonElement.classList.remove('img-filters__button--active');
-    filterDiscussedButtonElement.classList.remove('img-filters__button--active');
+  var unactivateLastButton = function () {
+    var activeButton = document.querySelector('.img-filters__button--active');
+    activeButton.classList.remove('img-filters__button--active');
   };
 
   /* Эти обработчики навешиваются 1 раз на кнопки фильтров и живут до конца,
   пока пользователь не закрыл окно, поэтому их не удаляю. */
-  /* filterPopularButtonElement.addEventListener('click', window.debounce(function () {
-    unactivateButtons();
-    filterPopularButtonElement.classList.add('img-filters__button--active');
-    window.pictures.showOriginal();
-  }));*/
-
   filterPopularButtonElement.addEventListener('click', function () {
-    unactivateButtons();
+    unactivateLastButton();
     filterPopularButtonElement.classList.add('img-filters__button--active');
-    window.debounce(window.pictures.showOriginal);
+    picturesSorting = window.pictures.getInitialArray();
+    window.debounce(updatePictures);
   });
 
-
-  /* filterNewButtonElement.addEventListener('click', window.debounce(function () {
-    unactivateButtons();
-    filterNewButtonElement.classList.add('img-filters__button--active');
-    window.pictures.showRandom();
-  }));*/
+  var updatePictures = function () {
+    window.pictures.remove();
+    window.pictures.render(picturesSorting);
+  };
 
   filterNewButtonElement.addEventListener('click', function () {
-    unactivateButtons();
+    unactivateLastButton();
     filterNewButtonElement.classList.add('img-filters__button--active');
-    window.debounce(window.pictures.showRandom);
+    picturesSorting = window.pictures.getRandom();
+    window.debounce(updatePictures);
   });
 
-  /* filterDiscussedButtonElement.addEventListener('click', window.debounce(function () {
-    unactivateButtons();
-    filterDiscussedButtonElement.classList.add('img-filters__button--active');
-    window.pictures.showMostDiscussed();
-  }));*/
-
   filterDiscussedButtonElement.addEventListener('click', function () {
-    unactivateButtons();
+    unactivateLastButton();
     filterDiscussedButtonElement.classList.add('img-filters__button--active');
-    window.debounce(window.pictures.showMostDiscussed);
+    picturesSorting = [];
+    picturesSorting = window.pictures.getInitialArray();
+    picturesSorting.sort(function (first, second) {
+      if (first.comments < second.comments) {
+        return 1;
+      } else if (first.comments > second.comments) {
+        return -1;
+      }
+      return 0;
+    });
+
+    window.debounce(updatePictures);
   });
 
   window.filters = {

@@ -46,10 +46,11 @@
       uploadDivElement.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
       uploadFileInputElement.value = '';
-      /* Сброс данных формы. Эффект сбрасывается на исходное состояние (heat)*/
+
+      /* Сброс данных формы. Эффект сбрасывается на исходное состояние, указанное в index.html по умолчанию */
       form.reset();
 
-      /* Сброс для слайдера и эффектов 100% */
+      /* Сброс на значение по умолчанию для слайдера и эффектов 100%, эффект берется из формы по умолчанию */
       window.slider.set(window.util.MAX_SLIDER_LENGTH);
       window.slider.deactivatePin();
       previewImgElement.style = '';
@@ -139,13 +140,11 @@
   var form = document.querySelector('.img-upload__form');
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
-      form.reset();
       closePopup();
       /* Сообщение при успешной загрузке изображения */
       window.popup.openSuccess();
     },
     function () {
-      form.reset();
       closePopup();
       /* Сообщение при ошибке */
       window.popup.openError();
