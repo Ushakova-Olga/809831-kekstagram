@@ -6,90 +6,51 @@
   var filterPopularButtonElement = document.querySelector('#filter-popular');
   var filterNewButtonElement = document.querySelector('#filter-new');
   var filterDiscussedButtonElement = document.querySelector('#filter-discussed');
-  var picturesSorting = [];
-  var currentFilter;
 
-  var hasClass = function (element, className) {
-    return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+  var unactivateButtons = function () {
+    filterPopularButtonElement.classList.remove('img-filters__button--active');
+    filterNewButtonElement.classList.remove('img-filters__button--active');
+    filterDiscussedButtonElement.classList.remove('img-filters__button--active');
   };
 
-  var setCurrentFilter = function () {
-    if (hasClass(filterPopularButtonElement, 'img-filters__button--active')) {
-      currentFilter = '#filter-popular';
-    } else if (hasClass(filterNewButtonElement, 'img-filters__button--active')) {
-      currentFilter = '#filter-new';
-    } else if (hasClass(filterDiscussedButtonElement, 'img-filters__button--active')) {
-      currentFilter = '#filter-discussed';
-    }
-  };
-
-  var unactivatePreviousButton = function () {
-    if (currentFilter) {
-      switch (currentFilter) {
-        case '#filter-popular':
-          filterPopularButtonElement.classList.remove('img-filters__button--active');
-          break;
-        case '#filter-new':
-          filterNewButtonElement.classList.remove('img-filters__button--active');
-          break;
-        case '#filter-discussed':
-          filterDiscussedButtonElement.classList.remove('img-filters__button--active');
-          break;
-      }
-    }
-  };
-
-  var onPopularButtonPressed = window.debounce(function () {
-    if (currentFilter !== '#filter-popular') {
-      unactivatePreviousButton();
-      filterPopularButtonElement.classList.add('img-filters__button--active');
-      picturesSorting = window.pictures.getInitialArray();
-      updatePictures(picturesSorting);
-      currentFilter = '#filter-popular';
-    }
-  });
-
-  var updatePictures = function (pictures) {
-    window.pictures.remove();
-    window.pictures.render(pictures);
-  };
-
-  var onNewButtonPressed = window.debounce(function () {
-    if (currentFilter !== '#filter-new') {
-      unactivatePreviousButton();
-      filterNewButtonElement.classList.add('img-filters__button--active');
-      picturesSorting = window.pictures.getRandom();
-      updatePictures(picturesSorting);
-      currentFilter = '#filter-new';
-    }
-  });
-
-  var onDiscussedButtonPressed = window.debounce(function () {
-    if (currentFilter !== '#filter-discussed') {
-      unactivatePreviousButton();
-      filterDiscussedButtonElement.classList.add('img-filters__button--active');
-      picturesSorting = [];
-      picturesSorting = window.pictures.getInitialArray();
-      picturesSorting.sort(function (first, second) {
-        if (first.comments < second.comments) {
-          return 1;
-        } else if (first.comments > second.comments) {
-          return -1;
-        }
-        return 0;
-      });
-
-      updatePictures(picturesSorting);
-      currentFilter = '#filter-discussed';
-    }
-  });
-
-  setCurrentFilter();
   /* Эти обработчики навешиваются 1 раз на кнопки фильтров и живут до конца,
   пока пользователь не закрыл окно, поэтому их не удаляю. */
-  filterPopularButtonElement.addEventListener('click', onPopularButtonPressed);
-  filterNewButtonElement.addEventListener('click', onNewButtonPressed);
-  filterDiscussedButtonElement.addEventListener('click', onDiscussedButtonPressed);
+  /* filterPopularButtonElement.addEventListener('click', window.debounce(function () {
+    unactivateButtons();
+    filterPopularButtonElement.classList.add('img-filters__button--active');
+    window.pictures.showOriginal();
+  }));*/
+
+  filterPopularButtonElement.addEventListener('click', function () {
+    unactivateButtons();
+    filterPopularButtonElement.classList.add('img-filters__button--active');
+    window.debounce(window.pictures.showOriginal);
+  });
+
+
+  /* filterNewButtonElement.addEventListener('click', window.debounce(function () {
+    unactivateButtons();
+    filterNewButtonElement.classList.add('img-filters__button--active');
+    window.pictures.showRandom();
+  }));*/
+
+  filterNewButtonElement.addEventListener('click', function () {
+    unactivateButtons();
+    filterNewButtonElement.classList.add('img-filters__button--active');
+    window.debounce(window.pictures.showRandom);
+  });
+
+  /* filterDiscussedButtonElement.addEventListener('click', window.debounce(function () {
+    unactivateButtons();
+    filterDiscussedButtonElement.classList.add('img-filters__button--active');
+    window.pictures.showMostDiscussed();
+  }));*/
+
+  filterDiscussedButtonElement.addEventListener('click', function () {
+    unactivateButtons();
+    filterDiscussedButtonElement.classList.add('img-filters__button--active');
+    window.debounce(window.pictures.showMostDiscussed);
+  });
 
   window.filters = {
     show: function () {
