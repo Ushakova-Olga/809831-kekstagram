@@ -38,7 +38,7 @@
 
       var pinX = pinDivElement.offsetLeft - shift.x;
       if ((pinX < window.util.MAX_SLIDER_LENGTH) && (pinX > 0)) {
-        window.slider.setSlider(pinX);
+        window.slider.set(pinX);
       }
     };
 
@@ -57,7 +57,7 @@
 
   /* Установка слайдера в зависимости от координаты маркера - xPin (центр маркера) */
   window.slider = {
-    setSlider: function (xPin) {
+    set: function (xPin) {
       var checked = effectsFieldsetElement.querySelector('input:checked');
       previewImgElement.className = 'effects__preview--' + checked.value;
 

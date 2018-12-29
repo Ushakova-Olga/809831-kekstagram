@@ -40,16 +40,17 @@
 
   /* Функция закрытия окна */
   var closePopup = function () {
+    form.reset();
     /* если фокус находится в поле ввода хэш-тега или поле комментария, нажатие на Esc не должно приводить к
     закрытию формы редактирования изображения.*/
     if ((hashInputElement !== document.activeElement) && (descriptionTextareaElement !== document.activeElement)) {
       uploadDivElement.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
       uploadFileInputElement.value = '';
-      previewImgElement.style.transform = 'scale(1)';
+      previewImgElement.style = '';
       /* Сброс на значение по умолчанию для слайдера
-      и эффектов 100%, эффект берется из формы последний выбранный пользователем */
-      window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
+      и эффектов 100% */
+      window.slider.set(window.util.MAX_SLIDER_LENGTH);
     }
   };
 
@@ -71,10 +72,10 @@
   closeUploadButtonElement.addEventListener('keydown', window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE));
 
   /* Установка эффектов и слайдера в первоначальное состояние 100% */
-  window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
+  window.slider.set(window.util.MAX_SLIDER_LENGTH);
 
   effectsFieldsetElement.addEventListener('change', function () {
-    window.slider.setSlider(window.util.MAX_SLIDER_LENGTH);
+    window.slider.set(window.util.MAX_SLIDER_LENGTH);
   });
 
   hashInputElement.addEventListener('input', function (evt) {
@@ -135,13 +136,11 @@
   var form = document.querySelector('.img-upload__form');
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
-      form.reset();
       closePopup();
       /* Сообщение при успешной загрузке изображения */
       window.popup.openSuccess();
     },
     function () {
-      form.reset();
       closePopup();
       /* Сообщение при ошибке */
       window.popup.openError();
