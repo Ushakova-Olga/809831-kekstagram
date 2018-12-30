@@ -41,21 +41,23 @@
   /* Функция закрытия окна */
   var closePopup = function () {
     form.reset();
-    /* если фокус находится в поле ввода хэш-тега или поле комментария, нажатие на Esc не должно приводить к
-    закрытию формы редактирования изображения.*/
-    if ((hashInputElement !== document.activeElement) && (descriptionTextareaElement !== document.activeElement)) {
-      uploadDivElement.classList.add('hidden');
-      document.removeEventListener('keydown', onPopupEscPress);
-      uploadFileInputElement.value = '';
-      previewImgElement.style = '';
-      /* Сброс на значение по умолчанию для слайдера
-      и эффектов 100% */
-      window.slider.set(window.util.MAX_SLIDER_LENGTH);
-    }
+    uploadDivElement.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+    uploadFileInputElement.value = '';
+    previewImgElement.style = '';
+    /* Сброс на значение по умолчанию для слайдера
+    и эффектов 100% */
+    window.slider.set(window.util.MAX_SLIDER_LENGTH);
   };
 
   /* Обработчик события - нажатие на ESC */
-  var onPopupEscPress = window.util.createKeydownHandler(closePopup, window.util.ESC_KEYCODE);
+  var onPopupEscPress = window.util.createKeydownHandler(function () {
+    /* если фокус находится в поле ввода хэш-тега или поле комментария, нажатие на Esc не должно приводить к
+    закрытию формы редактирования изображения.*/
+    if ((hashInputElement !== document.activeElement) && (descriptionTextareaElement !== document.activeElement)) {
+      closePopup();
+    }
+  }, window.util.ESC_KEYCODE);
 
   /* Функция открытия окна */
   var openPopup = function () {
