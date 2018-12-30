@@ -10,29 +10,31 @@
   var scaleControlInputElement = document.querySelector('.scale__control--value');
   var previewImgElement = document.querySelector('.img-upload__preview img');
 
-  scaleSmallButtonElement.addEventListener('click', function () {
-    var valStr = scaleControlInputElement.value;
-    var valNumber = valStr.slice(0, scaleControlInputElement.value.length - 1);
+  var getScaleValue = function () {
+    var value = scaleControlInputElement.value;
+    return parseInt(value.replace(/\D/, ''), 10);
+  };
 
-    valNumber -= 25;
-    if (valNumber < 25) {
-      valNumber = 25;
+  var setScaleValue = function (value) {
+    scaleControlInputElement.value = value + '%';
+    previewImgElement.style.transform = 'scale(' + value / 100 + ' )';
+  };
+
+  scaleSmallButtonElement.addEventListener('click', function () {
+    var value = getScaleValue();
+
+    if (value > 25) {
+      value -= 25;
+      setScaleValue(value);
     }
-    valStr = valNumber + '%';
-    scaleControlInputElement.value = valStr;
-    previewImgElement.style.transform = 'scale(' + valNumber / 100 + ' )';
   });
 
   scaleBigButtonElement.addEventListener('click', function () {
-    var valStr = scaleControlInputElement.value;
-    var valNumber = valStr.slice(0, scaleControlInputElement.value.length - 1);
+    var value = getScaleValue();
 
-    valNumber = +valNumber + 25;
-    if (valNumber > 100) {
-      valNumber = 100;
+    if (value < 100) {
+      value += 25;
+      setScaleValue(value);
     }
-    valStr = valNumber + '%';
-    scaleControlInputElement.value = valStr;
-    previewImgElement.style.transform = 'scale(' + valNumber / 100 + ' )';
   });
 })();

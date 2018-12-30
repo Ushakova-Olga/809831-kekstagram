@@ -44,9 +44,8 @@
         return 1;
       } else if (first.comments > second.comments) {
         return -1;
-      } else {
-        return 0;
       }
+      return 0;
     });
 
     window.debounce(updatePictures(picturesSorting));
