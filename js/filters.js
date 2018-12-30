@@ -20,19 +20,19 @@
     unactivateLastButton();
     filterPopularButtonElement.classList.add(ACTIVE_CLASS_NAME);
     picturesSorting = window.pictures.getInitialArray();
-    window.debounce(updatePictures);
+    updatePictures();
   });
 
-  var updatePictures = function () {
+  var updatePictures = window.debounce(function () {
     window.pictures.remove();
     window.pictures.render(picturesSorting);
-  };
+  });
 
   filterNewButtonElement.addEventListener('click', function () {
     unactivateLastButton();
     filterNewButtonElement.classList.add(ACTIVE_CLASS_NAME);
     picturesSorting = window.pictures.getRandom();
-    window.debounce(updatePictures);
+    updatePictures();
   });
 
   filterDiscussedButtonElement.addEventListener('click', function () {
@@ -49,7 +49,7 @@
       return 0;
     });
 
-    window.debounce(updatePictures);
+    updatePictures();
   });
 
   window.filters = {
