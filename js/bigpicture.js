@@ -34,7 +34,7 @@
     showNextComments();
     document.addEventListener('keydown', onDocumentEscPress);
     commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
-    bigPictureCancelElement.addEventListener('click', closeBigPicture);
+    bigPictureCancelElement.addEventListener('click', onCancelElementClick);
     bigPictureCancelElement.focus();
   };
 
@@ -76,6 +76,10 @@
     document.removeEventListener('keydown', onDocumentEscPress);
     commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
     bigPictureCancelElement.removeEventListener('click', closeBigPicture);
+  };
+
+  var onCancelElementClick = function () {
+    closeBigPicture();
   };
 
   var onDocumentEscPress = window.util.createKeydownHandler(closeBigPicture, window.util.ESC_KEYCODE);

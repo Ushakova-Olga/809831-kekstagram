@@ -3,6 +3,9 @@
 /* Модуль для работы с фильтрамии */
 (function () {
   var ACTIVE_CLASS_NAME = 'img-filters__button--active';
+  var FILTER_POPULAR = 'filter-popular';
+  var FILTER_NEW = 'filter-new';
+  var FILTER_DISCUSSED = 'filter-discussed';
   var filtersContainerElement = document.querySelector('.img-filters');
   var filterPopularButtonElement = document.querySelector('#filter-popular');
   var filterNewButtonElement = document.querySelector('#filter-new');
@@ -15,13 +18,13 @@
 
   var updatePictures = window.debounce(function (value) {
     switch (value) {
-      case 'filter-popular':
+      case FILTER_POPULAR:
         window.pictures.showOriginal();
         break;
-      case 'filter-new':
+      case FILTER_NEW:
         window.pictures.showRandom();
         break;
-      case 'filter-discussed':
+      case FILTER_DISCUSSED:
         window.pictures.showMostDiscussed();
         break;
     }
@@ -32,19 +35,19 @@
   filterPopularButtonElement.addEventListener('click', function () {
     unsetActiveButton();
     filterPopularButtonElement.classList.add(ACTIVE_CLASS_NAME);
-    updatePictures('filter-popular');
+    updatePictures(FILTER_POPULAR);
   });
 
   filterNewButtonElement.addEventListener('click', function () {
     unsetActiveButton();
     filterNewButtonElement.classList.add(ACTIVE_CLASS_NAME);
-    updatePictures('filter-new');
+    updatePictures(FILTER_NEW);
   });
 
   filterDiscussedButtonElement.addEventListener('click', function () {
     unsetActiveButton();
     filterDiscussedButtonElement.classList.add(ACTIVE_CLASS_NAME);
-    updatePictures('filter-discussed');
+    updatePictures(FILTER_DISCUSSED);
   });
 
   window.filters = {

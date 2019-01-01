@@ -8,7 +8,6 @@
 
   var picturesSectionElement = document.querySelector('.pictures');
   var originPictures = [];
-  var picturesSorting = [];
 
   /* Удаляем картинки из DOM */
   var cleanPictures = function () {
@@ -20,6 +19,8 @@
 
   var renderPictures = function (pictures) {
     var fragment = document.createDocumentFragment();
+    cleanPictures();
+
     pictures.forEach(function (item) {
       fragment.appendChild(createElementPicture(item, pictureTemplate));
     });
@@ -79,15 +80,15 @@
 
   window.pictures = {
     showOriginal: function () {
-      cleanPictures();
       renderPictures(originPictures);
     },
     showRandom: function () {
+      var picturesSorting = [];
       picturesSorting = getRandomElements(originPictures, 10);
-      cleanPictures();
       renderPictures(picturesSorting);
     },
     showMostDiscussed: function () {
+      var picturesSorting = [];
       picturesSorting = [];
       picturesSorting = originPictures.slice();
       picturesSorting.sort(function (first, second) {
@@ -99,7 +100,6 @@
         return 0;
       });
 
-      cleanPictures();
       renderPictures(picturesSorting);
     }
   };
