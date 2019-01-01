@@ -83,14 +83,11 @@
       renderPictures(originPictures);
     },
     showRandom: function () {
-      var picturesSorting = [];
-      picturesSorting = getRandomElements(originPictures, 10);
+      var picturesSorting = getRandomElements(originPictures, 10);
       renderPictures(picturesSorting);
     },
     showMostDiscussed: function () {
-      var picturesSorting = [];
-      picturesSorting = [];
-      picturesSorting = originPictures.slice();
+      var picturesSorting = originPictures.slice();
       picturesSorting.sort(function (first, second) {
         if (first.comments < second.comments) {
           return 1;
