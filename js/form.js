@@ -13,6 +13,7 @@
   var hashInputElement = document.querySelector('.text__hashtags');
   var descriptionTextareaElement = document.querySelector('.text__description');
   var previewImgElement = document.querySelector('.img-upload__preview img');
+  var form = document.querySelector('.img-upload__form');
 
   /* Обработчик события изменение в поле - имя файла */
   uploadFileInputElement.addEventListener('change', function () {
@@ -43,11 +44,17 @@
     form.reset();
     uploadDivElement.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
+    closeUploadButtonElement.removeEventListener('click', onClickClose);
+    closeUploadButtonElement.removeEventListener('keydown', onEscClose);
+    effectsFieldsetElement.removeEventListener('change', onChangeEffectsFieldset);
+    hashInputElement.removeEventListener('input', onInputHash);
+    form.removeEventListener('submit', onSubmitForm);
     previewImgElement.style = '';
     /* Сброс на значение по умолчанию для слайдера
     и эффектов 100% */
     window.slider.set(window.util.MAX_SLIDER_LENGTH);
     window.slider.deactivatePin();
+    window.scale.deactivate();
   };
 
   /* Обработчик события - нажатие на ESC */
@@ -64,24 +71,27 @@
     uploadDivElement.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
     window.slider.activatePin();
+    window.scale.activate();
+    closeUploadButtonElement.addEventListener('click', onClickClose);
+    closeUploadButtonElement.addEventListener('keydown', onEscClose);
+    effectsFieldsetElement.addEventListener('change', onChangeEffectsFieldset);
+    hashInputElement.addEventListener('input', onInputHash);
+    form.addEventListener('submit', onSubmitForm);
   };
 
   /* Обработчик события - клик на крестике */
-  closeUploadButtonElement.addEventListener('click', function () {
+  var onClickClose = function () {
     closePopup();
-  });
+  };
 
   /* Обработчик события - нажатие Enter на крестике */
-  closeUploadButtonElement.addEventListener('keydown', window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE));
+  var onEscClose = window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE);
 
-  /* Установка эффектов и слайдера в первоначальное состояние 100% */
-  window.slider.set(window.util.MAX_SLIDER_LENGTH);
-
-  effectsFieldsetElement.addEventListener('change', function () {
+  var onChangeEffectsFieldset = function () {
     window.slider.set(window.util.MAX_SLIDER_LENGTH);
-  });
+  };
 
-  hashInputElement.addEventListener('input', function (evt) {
+  var onInputHash = function (evt) {
     var target = evt.target;
     /* Удалить повторяющиеся пробелы в строке, первый и последний пробел при наличии
     чтобы избежать создания пустых элементов в массиве */
@@ -133,11 +143,10 @@
     } else {
       target.classList.remove('border-red');
     }
-  });
+  };
 
   /* Закрыть форму после загрузки и задать поля по умолчанию */
-  var form = document.querySelector('.img-upload__form');
-  form.addEventListener('submit', function (evt) {
+  var onSubmitForm = function (evt) {
     window.backend.save(new FormData(form), function () {
       closePopup();
       /* Сообщение при успешной загрузке изображения */
@@ -149,5 +158,8 @@
       window.popup.openError();
     });
     evt.preventDefault();
-  });
+  };
+
+  /* Установка эффектов и слайдера в первоначальное состояние 100% */
+  window.slider.set(window.util.MAX_SLIDER_LENGTH);
 })();
