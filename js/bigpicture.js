@@ -33,6 +33,8 @@
 
     showNextComments();
     document.addEventListener('keydown', onDocumentEscPress);
+    commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
+    bigPictureCancelElement.addEventListener('click', onCancelElementClick);
     bigPictureCancelElement.focus();
   };
 
@@ -72,6 +74,12 @@
     bigPictureSectionElement.classList.add('hidden');
     bodyElement.classList.remove('modal-open');
     document.removeEventListener('keydown', onDocumentEscPress);
+    commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
+    bigPictureCancelElement.removeEventListener('click', onCancelElementClick);
+  };
+
+  var onCancelElementClick = function () {
+    closeBigPicture();
   };
 
   var onDocumentEscPress = window.util.createKeydownHandler(closeBigPicture, window.util.ESC_KEYCODE);
@@ -83,12 +91,6 @@
       commentsLoaderElement.classList.add('visually-hidden');
     }
   };
-
-  /* Эти обработчики навешиваются только 1 раз и связаны только с единственным элементом - bigPicture
-  Поэтому их не удаляю. Они будут жить с открытием сайта в единственном экземпляре и до его закрытия */
-  commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
-  bigPictureCancelElement.addEventListener('click', closeBigPicture);
-
 
   window.bigPicture = {
     open: show

@@ -4,7 +4,9 @@
 (function () {
   /* При нажатии на кнопки .scale__control--smaller и .scale__control--bigger должно изменяться
   значение поля .scale__control--value.*/
-
+  var MIN_SCALE_VALUE = 25;
+  var SCALE_STEP = 25;
+  var MAX_SCALE_VALUE = 100;
   var scaleSmallButtonElement = document.querySelector('.scale__control--smaller');
   var scaleBigButtonElement = document.querySelector('.scale__control--bigger');
   var scaleControlInputElement = document.querySelector('.scale__control--value');
@@ -23,8 +25,8 @@
   scaleSmallButtonElement.addEventListener('click', function () {
     var value = getScaleValue();
 
-    if (value > 25) {
-      value -= 25;
+    if (value > MIN_SCALE_VALUE) {
+      value -= SCALE_STEP;
       setScaleValue(value);
     }
   });
@@ -32,8 +34,8 @@
   scaleBigButtonElement.addEventListener('click', function () {
     var value = getScaleValue();
 
-    if (value < 100) {
-      value += 25;
+    if (value < MAX_SCALE_VALUE) {
+      value += SCALE_STEP;
       setScaleValue(value);
     }
   });

@@ -19,6 +19,8 @@
 
   var renderPictures = function (pictures) {
     var fragment = document.createDocumentFragment();
+    cleanPictures();
+
     pictures.forEach(function (item) {
       fragment.appendChild(createElementPicture(item, pictureTemplate));
     });
@@ -76,19 +78,26 @@
     return objectElement;
   };
 
-
   window.pictures = {
-    remove: cleanPictures,
-    render: function (pictures) {
-      renderPictures(pictures);
+    showOriginal: function () {
+      renderPictures(originPictures);
     },
-    getRandom: function () {
-      return getRandomElements(originPictures, 10);
+    showRandom: function () {
+      var picturesSorting = getRandomElements(originPictures, 10);
+      renderPictures(picturesSorting);
     },
-    getInitialArray: function () {
-      var pictures = [];
-      pictures = originPictures.slice();
-      return pictures;
+    showMostDiscussed: function () {
+      var picturesSorting = originPictures.slice();
+      picturesSorting.sort(function (first, second) {
+        if (first.comments < second.comments) {
+          return 1;
+        } else if (first.comments > second.comments) {
+          return -1;
+        }
+        return 0;
+      });
+
+      renderPictures(picturesSorting);
     }
   };
   window.backend.load(onSuccessLoad, onErrorLoad);

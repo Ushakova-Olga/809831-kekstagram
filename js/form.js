@@ -43,11 +43,11 @@
     form.reset();
     uploadDivElement.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
-    uploadFileInputElement.value = '';
     previewImgElement.style = '';
     /* Сброс на значение по умолчанию для слайдера
     и эффектов 100% */
     window.slider.set(window.util.MAX_SLIDER_LENGTH);
+    window.slider.deactivatePin();
   };
 
   /* Обработчик события - нажатие на ESC */
@@ -63,6 +63,7 @@
   var openPopup = function () {
     uploadDivElement.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
+    window.slider.activatePin();
   };
 
   /* Обработчик события - клик на крестике */
