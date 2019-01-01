@@ -75,7 +75,7 @@
     bodyElement.classList.remove('modal-open');
     document.removeEventListener('keydown', onDocumentEscPress);
     commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
-    bigPictureCancelElement.removeEventListener('click', closeBigPicture);
+    bigPictureCancelElement.removeEventListener('click', onCancelElementClick);
   };
 
   var onCancelElementClick = function () {
