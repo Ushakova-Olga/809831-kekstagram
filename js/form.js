@@ -48,6 +48,7 @@
     и эффектов 100% */
     window.slider.set(window.util.MAX_SLIDER_LENGTH);
     window.slider.deactivatePin();
+    hashInputElement.classList.remove('border-red');
   };
 
   /* Обработчик события - нажатие на ESC */
