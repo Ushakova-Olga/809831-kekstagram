@@ -48,6 +48,7 @@
     и эффектов 100% */
     window.slider.set(window.util.MAX_SLIDER_LENGTH);
     window.slider.deactivatePin();
+    hashInputElement.classList.remove('border-red');
   };
 
   /* Обработчик события - нажатие на ESC */
@@ -70,9 +71,6 @@
   closeUploadButtonElement.addEventListener('click', function () {
     closePopup();
   });
-
-  /* Обработчик события - нажатие Enter на крестике */
-  closeUploadButtonElement.addEventListener('keydown', window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE));
 
   /* Установка эффектов и слайдера в первоначальное состояние 100% */
   window.slider.set(window.util.MAX_SLIDER_LENGTH);
