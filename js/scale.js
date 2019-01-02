@@ -22,7 +22,7 @@
     previewImgElement.style.transform = 'scale(' + value / 100 + ' )';
   };
 
-  var onClickSmallButton = function () {
+  var onSmallButtonClick = function () {
     var value = getScaleValue();
 
     if (value > MIN_SCALE_VALUE) {
@@ -31,7 +31,7 @@
     }
   };
 
-  var onClickBigButton = function () {
+  var onBigButtonClick = function () {
     var value = getScaleValue();
 
     if (value < MAX_SCALE_VALUE) {
@@ -42,12 +42,12 @@
 
   window.scale = {
     activate: function () {
-      scaleSmallButtonElement.addEventListener('click', onClickSmallButton);
-      scaleBigButtonElement.addEventListener('click', onClickBigButton);
+      scaleSmallButtonElement.addEventListener('click', onSmallButtonClick);
+      scaleBigButtonElement.addEventListener('click', onBigButtonClick);
     },
     deactivate: function () {
-      scaleSmallButtonElement.removeEventListener('click', onClickSmallButton);
-      scaleBigButtonElement.removeEventListener('click', onClickBigButton);
+      scaleSmallButtonElement.removeEventListener('click', onSmallButtonClick);
+      scaleBigButtonElement.removeEventListener('click', onBigButtonClick);
     }
   };
 })();

@@ -44,11 +44,11 @@
     form.reset();
     uploadDivElement.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
-    closeUploadButtonElement.removeEventListener('click', onClickClose);
-    closeUploadButtonElement.removeEventListener('keydown', onEscClose);
-    effectsFieldsetElement.removeEventListener('change', onChangeEffectsFieldset);
-    hashInputElement.removeEventListener('input', onInputHash);
-    form.removeEventListener('submit', onSubmitForm);
+    closeUploadButtonElement.removeEventListener('click', onCloseButtonClick);
+    closeUploadButtonElement.removeEventListener('keydown', onCloseButtonEnterPress);
+    effectsFieldsetElement.removeEventListener('change', onEffectsFieldsetChange);
+    hashInputElement.removeEventListener('input', onHashInput);
+    form.removeEventListener('submit', onFormSubmit);
     previewImgElement.style = '';
     /* Сброс на значение по умолчанию для слайдера
     и эффектов 100% */
@@ -72,26 +72,26 @@
     document.addEventListener('keydown', onPopupEscPress);
     window.slider.activatePin();
     window.scale.activate();
-    closeUploadButtonElement.addEventListener('click', onClickClose);
-    closeUploadButtonElement.addEventListener('keydown', onEscClose);
-    effectsFieldsetElement.addEventListener('change', onChangeEffectsFieldset);
-    hashInputElement.addEventListener('input', onInputHash);
-    form.addEventListener('submit', onSubmitForm);
+    closeUploadButtonElement.addEventListener('click', onCloseButtonClick);
+    closeUploadButtonElement.addEventListener('keydown', onCloseButtonEnterPress);
+    effectsFieldsetElement.addEventListener('change', onEffectsFieldsetChange);
+    hashInputElement.addEventListener('input', onHashInput);
+    form.addEventListener('submit', onFormSubmit);
   };
 
   /* Обработчик события - клик на крестике */
-  var onClickClose = function () {
+  var onCloseButtonClick = function () {
     closePopup();
   };
 
   /* Обработчик события - нажатие Enter на крестике */
-  var onEscClose = window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE);
+  var onCloseButtonEnterPress = window.util.createKeydownHandler(closePopup, window.util.ENTER_KEYCODE);
 
-  var onChangeEffectsFieldset = function () {
+  var onEffectsFieldsetChange = function () {
     window.slider.set(window.util.MAX_SLIDER_LENGTH);
   };
 
-  var onInputHash = function (evt) {
+  var onHashInput = function (evt) {
     var target = evt.target;
     /* Удалить повторяющиеся пробелы в строке, первый и последний пробел при наличии
     чтобы избежать создания пустых элементов в массиве */
@@ -146,7 +146,7 @@
   };
 
   /* Закрыть форму после загрузки и задать поля по умолчанию */
-  var onSubmitForm = function (evt) {
+  var onFormSubmit = function (evt) {
     window.backend.save(new FormData(form), function () {
       closePopup();
       /* Сообщение при успешной загрузке изображения */
