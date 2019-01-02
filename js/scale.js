@@ -22,32 +22,21 @@
     previewImgElement.style.transform = 'scale(' + value / 100 + ' )';
   };
 
-  var onSmallButtonClick = function () {
+  scaleSmallButtonElement.addEventListener('click', function () {
     var value = getScaleValue();
 
     if (value > MIN_SCALE_VALUE) {
       value -= SCALE_STEP;
       setScaleValue(value);
     }
-  };
+  });
 
-  var onBigButtonClick = function () {
+  scaleBigButtonElement.addEventListener('click', function () {
     var value = getScaleValue();
 
     if (value < MAX_SCALE_VALUE) {
       value += SCALE_STEP;
       setScaleValue(value);
     }
-  };
-
-  window.scale = {
-    activate: function () {
-      scaleSmallButtonElement.addEventListener('click', onSmallButtonClick);
-      scaleBigButtonElement.addEventListener('click', onBigButtonClick);
-    },
-    deactivate: function () {
-      scaleSmallButtonElement.removeEventListener('click', onSmallButtonClick);
-      scaleBigButtonElement.removeEventListener('click', onBigButtonClick);
-    }
-  };
+  });
 })();
